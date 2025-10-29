@@ -17,26 +17,38 @@ function App() {
     fetchTodos();
   }, []);
 
+
+  //get button
   const fetchTodos = async () => {
   const res = await axios.get("http://localhost:8081/api/todos");
   setTodos(res.data.map((t) => ({ ...t, isEditing: false })));
 };
 
+  //get addTodo
+  const [priority, setPriority] = useState("LOW");
+  const [category, setCategory] = useState("General");
+
   const addTodo = async () => {
     if (!newTodo.trim()) return;
-    await axios.post("http://localhost:8081/api/todos", {
-      description: newTodo,
-      completed: false,
-    });
+        await axios.post("http://localhost:8081/api/todos", {
+          description: newTodo,
+          completed: false,
+          category,
+          priority,
+        });
     setNewTodo("");
+    setCategory("General");
+    setPriority("LOW");
     fetchTodos();
   };
 
+  //delete item
   const deleteTodo = async (id) => {
     await axios.delete(`http://localhost:8081/api/todos/${id}`);
     fetchTodos();
   };
 
+  //change to-do item
   const toggleTodo = async (id, completed) => {
     const todo = todos.find((t) => t.id === id);
     await axios.put(`http://localhost:8081/api/todos/${id}`, {
@@ -48,29 +60,51 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-      <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md">
+      <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-2xl">
         <h1 className="text-3xl font-bold text-center mb-6 text-gray-800">
           My To-do List
         </h1>
 
-        <div className="flex mb-4">
-         <input
-              type="text"
-              value={newTodo}
-              onChange={(e) => setNewTodo(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") addTodo();
-              }}
-              placeholder="Enter a new task"
-              className="flex-grow border border-gray-300 rounded-l-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-            />
-          <button
-            onClick={addTodo}
-            className="bg-blue-500 text-white px-4 py-2 rounded-r-lg hover:bg-blue-600 transition"
-          >
-            Add
-          </button>
-        </div>
+        <div className="flex mb-4 space-x-2">
+        <input
+          type="text"
+          value={newTodo}
+          onChange={(e) => setNewTodo(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") addTodo();
+          }}
+          placeholder="Enter a new task"
+          className="flex-grow border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
+
+        <select
+          id="priority"
+          onChange={(e) => setPriority(e.target.value)}
+          className="border border-gray-300 rounded-lg px-2 py-2"
+        >
+          <option value="LOW">Low</option>
+          <option value="MEDIUM">Medium</option>
+          <option value="HIGH">High</option>
+        </select>
+
+        <select
+          id="category"
+          onChange={(e) => setCategory(e.target.value)}
+          className="border border-gray-300 rounded-lg px-2 py-2"
+        >
+          <option value="General">General</option>
+          <option value="Work">Work</option>
+          <option value="Personal">Personal</option>
+          <option value="Fitness">Fitness</option>
+        </select>
+
+        <button
+          onClick={addTodo}
+          className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
+        >
+          Add
+        </button>
+</div>
 
         <ul className="space-y-3">
           {todos.map((todo) => (
@@ -171,12 +205,26 @@ function App() {
                 )}
               </div>
 
-              <button
-                onClick={() => deleteTodo(todo.id)}
-                className="text-red-500 hover:text-red-700 font-semibold transition"
-              >
-                Delete
-              </button>
+              <div className="flex items-center space-x-3">
+                <button
+                  onClick={() => deleteTodo(todo.id)}
+                  className="text-red-500 hover:text-red-700 font-semibold transition"
+                >
+                  Delete
+                </button>
+
+                <span
+                  className={`px-2 py-1 rounded text-xs font-semibold ${
+                    todo.priority === "HIGH"
+                      ? "bg-red-100 text-red-600"
+                      : todo.priority === "MEDIUM"
+                      ? "bg-yellow-100 text-yellow-600"
+                      : "bg-green-100 text-green-600"
+                  }`}
+                >
+                  {todo.priority}
+                </span>
+              </div>
             </li>
           ))}
         </ul>
