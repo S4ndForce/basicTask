@@ -9,6 +9,8 @@ function App() {
     await axios.put(`http://localhost:8081/api/todos/${todo.id}`, {
       description: todo.description,
       completed: todo.completed,
+      category: todo.category,
+      priority: todo.priority,
     });
     fetchTodos();
   };
@@ -19,14 +21,18 @@ function App() {
 
 
   //get button
-  const fetchTodos = async () => {
-  const res = await axios.get("http://localhost:8081/api/todos");
+  const fetchTodos = async (sort = sortByPriority) => {
+  const res = await axios.get(`http://localhost:8081/api/todos?sortByPriority=${sort}`);
   setTodos(res.data.map((t) => ({ ...t, isEditing: false })));
+  
+
+  
 };
 
   //get addTodo
   const [priority, setPriority] = useState("LOW");
   const [category, setCategory] = useState("General");
+  const [sortByPriority, setSortByPriority] = useState(false);
 
   const addTodo = async () => {
     if (!newTodo.trim()) return;
@@ -37,8 +43,6 @@ function App() {
           priority,
         });
     setNewTodo("");
-    setCategory("General");
-    setPriority("LOW");
     fetchTodos();
   };
 
@@ -60,7 +64,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-      <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-2xl">
+      <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-4xl">
         <h1 className="text-3xl font-bold text-center mb-6 text-gray-800">
           My To-do List
         </h1>
@@ -79,7 +83,12 @@ function App() {
 
         <select
           id="priority"
-          onChange={(e) => setPriority(e.target.value)}
+          value={priority}
+            onChange={(e) => {
+              setPriority(e.target.value);
+              e.target.blur(); // closes dropdown
+            }}
+          
           className="border border-gray-300 rounded-lg px-2 py-2"
         >
           <option value="LOW">Low</option>
@@ -89,7 +98,11 @@ function App() {
 
         <select
           id="category"
-          onChange={(e) => setCategory(e.target.value)}
+          value={category}
+            onChange={(e) => {
+            setCategory(e.target.value);
+            e.target.blur(); // closes dropdown
+          }}
           className="border border-gray-300 rounded-lg px-2 py-2"
         >
           <option value="General">General</option>
@@ -104,7 +117,25 @@ function App() {
         >
           Add
         </button>
+        <div className="flex flex-col mb-6 items-end space-y-2">
+          <button
+            onClick={() => fetchTodos(true)}
+            className="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition w-20 text-center"
+          >
+            Sort
+          </button>
+
+          <button
+            onClick={() => fetchTodos(false)}
+            className="bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500 transition w-15 text-center"
+          >
+            Unsort
+          </button>
+        </div>
+        
 </div>
+
+
 
         <ul className="space-y-3">
           {todos.map((todo) => (

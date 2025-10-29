@@ -17,7 +17,12 @@ public class TodoController {
 
     // GET all todos
     @GetMapping
-    public List<TodoItem> getAllTodos() {
+    public List<TodoItem> getAllTodos(
+        @RequestParam(required = false, defaultValue = "false") boolean sortByPriority){
+            
+        if(sortByPriority){
+            return repository.findAllByOrderByPriorityCustom();
+        }
         return repository.findAll();
     }
 
@@ -42,4 +47,4 @@ public class TodoController {
     public void deleteTodo(@PathVariable Long id) {
         repository.deleteById(id);
     }
-}
+    }
