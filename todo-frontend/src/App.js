@@ -52,10 +52,18 @@ function App() {
     fetchTodos();
   };
 
+  const deleteCompleted = async (id) => {
+      const completedTodos = todos.filter(t => t.completed); //completes code based on filters
+      for(const todo of completedTodos){
+        await axios.delete(`http://localhost:8081/api/todos/${todo.id}`);
+      }
+      fetchTodos();
+  }
+
   //change to-do item
   const toggleTodo = async (id, completed) => {
-    const todo = todos.find((t) => t.id === id);
-    await axios.put(`http://localhost:8081/api/todos/${id}`, {
+    const todo = todos.find((t) => t.id === id); //finds the todo to checkmark
+    await axios.put(`http://localhost:8081/api/todos/${id}`, { //await feature makes sure the backend actually updates before moving on
       ...todo,
       completed,
     });
@@ -63,7 +71,9 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+    
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center">  {/*Parent container that determines size of everything else */}
+    {/*flex puts everything in one line, items center alligns children, space x-2 uniform space between children */}
       <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-4xl">
         <h1 className="text-3xl font-bold text-center mb-6 text-gray-800">
           My To-do List
@@ -243,6 +253,17 @@ function App() {
                 >
                   Delete
                 </button>
+              
+              {todos.some(t => t.completed) && (
+                <div className="fixed right-6 bottom-6">
+                  <button
+                    onClick = {deleteCompleted}
+                    className = "bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-red-600 transition"
+                  >
+                    Delete Completed
+                  </button>
+                  </div>
+              )}
 
                 <span
                   className={`px-2 py-1 rounded text-xs font-semibold ${
