@@ -11,6 +11,7 @@ public interface TodoRepository extends JpaRepository<TodoItem, Long> {
            "WHEN 'LOW' THEN 1 " +
            "END DESC")
     List<TodoItem> findAllByOrderByPriorityCustom();
+    void deleteByCompletedTrue(); //finds whats completed
 
 
 }

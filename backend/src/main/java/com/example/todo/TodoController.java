@@ -50,7 +50,8 @@ public class TodoController {
 
     @DeleteMapping("/completed")
     public void deleteCompletedTodos(){
-        repository.deleteByCompletedTrue(); //checks each version
+        repository.deleteByCompletedTrue(); //checks each version so that it will include everything
 
+        
     }
     }
