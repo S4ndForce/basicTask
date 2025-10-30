@@ -47,4 +47,10 @@ public class TodoController {
     public void deleteTodo(@PathVariable Long id) {
         repository.deleteById(id);
     }
+
+    @DeleteMapping("/completed")
+    public void deleteCompletedTodos(){
+        repository.deleteByCompletedTrue(); //checks each version
+
+    }
     }
