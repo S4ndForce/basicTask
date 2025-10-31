@@ -47,7 +47,7 @@ function App() {
   };
 
   //delete item
-  const deleteTodo = async (id) => {
+  const deleteTodo = async (id) => { // cdelete the function when deleteTodo is called, wrapped in a function, await and async just wiat to get a response
     await axios.delete(`http://localhost:8081/api/todos/${id}`);
     fetchTodos();
   };
@@ -122,14 +122,14 @@ function App() {
         </select>
 
         <button
-          onClick={addTodo}
+          onClick={addTodo} 
           className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
         >
           Add
         </button>
         <div className="flex flex-col mb-6 items-end space-y-2">
           <button
-            onClick={() => fetchTodos(true)}
+            onClick={() => fetchTodos(true)} //on click call the function and mark it true () => is an anynymous function.
             className="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition w-20 text-center"
           >
             Sort
@@ -142,6 +142,9 @@ function App() {
             Unsort
           </button>
         </div>
+
+       
+
         
 </div>
 
@@ -254,17 +257,7 @@ function App() {
                   Delete
                 </button>
               
-              {todos.some(t => t.completed) && (
-                <div className="fixed right-6 bottom-6">
-                  <button
-                    onClick = {deleteCompleted}
-                    className = "bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-red-600 transition"
-                  >
-                    Delete Completed
-                  </button>
-                  </div>
-              )}
-
+              
                 <span
                   className={`px-2 py-1 rounded text-xs font-semibold ${
                     todo.priority === "HIGH"
@@ -280,6 +273,18 @@ function App() {
             </li>
           ))}
         </ul>
+       <div
+    className={`absolute right-0 top-1/2 transform -translate-y-1/2 
+                transition-all duration-500 ease-in-out 
+                ${todos.some(t => t.completed) ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"}`}
+                  >
+                    <button
+                      onClick={deleteCompleted}
+                      className="bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-red-600 transition"
+                    >
+                      Delete Completed
+                    </button>
+                  </div>
       </div>
     </div>
   );

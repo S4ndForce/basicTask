@@ -13,5 +13,5 @@ public interface TodoRepository extends JpaRepository<TodoItem, Long> {
     List<TodoItem> findAllByOrderByPriorityCustom();
     void deleteByCompletedTrue(); //finds whats completed
 
-
+    //to bbe completed : search query, and notifcations/times to be completed
 }
