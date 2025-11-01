@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-
+let currentState = false;
 function App() {
+  
   const [todos, setTodos] = useState([]);
   const [newTodo, setNewTodo] = useState("");
 
   const updateTodo = async (todo) => {
-    await axios.put(`http://localhost:8081/api/todos/${todo.id}`, {
+    await axios.put(`http://localhost:8081/api/todos/${todo.id}`, { //use axios everytime you want the app to remember something
       description: todo.description,
       completed: todo.completed,
       category: todo.category,
       priority: todo.priority,
     });
-    fetchTodos();
+    fetchTodos(); //refreshes my todos from the back end everytime i update it on the front
   };
 
   useEffect(() => {
@@ -29,10 +30,11 @@ function App() {
   
 };
 
-  //get addTodo
+  //default variables
   const [priority, setPriority] = useState("LOW");
   const [category, setCategory] = useState("General");
   const [sortByPriority, setSortByPriority] = useState(false);
+  
 
   const addTodo = async () => {
     if (!newTodo.trim()) return;
@@ -129,14 +131,18 @@ function App() {
         </button>
         <div className="flex flex-col mb-6 items-end space-y-2">
           <button
-            onClick={() => fetchTodos(true)} //on click call the function and mark it true () => is an anynymous function.
+            onClick={() => {
+              setSortByPriority(true); //makes it persistent by re-rendering the program instead of just useState which doesn't re render it and always has a default of false
+              fetchTodos(true)}} //on click call the function and mark it true () => is an anynymous function.
             className="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition w-20 text-center"
           >
             Sort
           </button>
 
           <button
-            onClick={() => fetchTodos(false)}
+            onClick={() => {
+              setSortByPriority(false); 
+              fetchTodos(false)}}
             className="bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500 transition w-15 text-center"
           >
             Unsort
@@ -273,6 +279,8 @@ function App() {
             </li>
           ))}
         </ul>
+      
+      </div>
        <div
     className={`absolute right-0 top-1/2 transform -translate-y-1/2 
                 transition-all duration-500 ease-in-out 
@@ -285,7 +293,6 @@ function App() {
                       Delete Completed
                     </button>
                   </div>
-      </div>
     </div>
   );
 }
