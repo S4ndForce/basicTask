@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useEffect, useState } from "react"; //state management variables
+import axios from "axios"; 
 let currentState = false;
 function App() {
   
   const [todos, setTodos] = useState([]);
   const [newTodo, setNewTodo] = useState("");
+  //const [searchTerm, searchTodo]
 
   const updateTodo = async (todo) => {
     await axios.put(`http://localhost:8081/api/todos/${todo.id}`, { //use axios everytime you want the app to remember something
@@ -49,7 +50,7 @@ function App() {
   };
 
   //delete item
-  const deleteTodo = async (id) => { // cdelete the function when deleteTodo is called, wrapped in a function, await and async just wiat to get a response
+  const deleteTodo = async (id) => { // delete the function when deleteTodo is called, wrapped in a function, await and async just wiat to get a response
     await axios.delete(`http://localhost:8081/api/todos/${id}`);
     fetchTodos();
   };
@@ -74,7 +75,7 @@ function App() {
 
   return (
     
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center">  {/*Parent container that determines size of everything else */}
+    <div className="n bg-gray-100 flex  justify-start pt-70 pl-5">  {/*Parent container that determines size of everything else */}
     {/*flex puts everything in one line, items center alligns children, space x-2 uniform space between children */}
       <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-4xl">
         <h1 className="text-3xl font-bold text-center mb-6 text-gray-800">
@@ -293,6 +294,22 @@ function App() {
                       Delete Completed
                     </button>
                   </div>
+      <div 
+      className="flex items-center space-x-2 mb-4">
+          <input
+            type="text"
+            
+            placeholder="Search for a todo"
+            className="w-64 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          />
+          <button
+            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
+          >
+            Search
+          </button>
+</div>
+
+    
     </div>
   );
 }

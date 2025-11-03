@@ -15,7 +15,7 @@ public class TodoItem {
     private String description;
     private boolean completed;
 
-    // ✅ New fields
+   
     private String category;
     private String priority; // LOW, MEDIUM, HIGH
 
