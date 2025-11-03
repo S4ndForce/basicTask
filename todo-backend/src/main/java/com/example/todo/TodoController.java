@@ -18,12 +18,21 @@ public class TodoController {
     // GET all todos
     @GetMapping
     public List<TodoItem> getAllTodos(
-        @RequestParam(required = false, defaultValue = "false") boolean sortByPriority){
+        @RequestParam(required = false, defaultValue = "false") boolean sortByPriority,
+        @RequestParam(required = false) String search
+        ){
             
-        if(sortByPriority){
+       
+        if(search != null && !search.isEmpty()){ 
+
+            return repository.findByDescriptionContainingIgnoreCase(search);
+        }
+        else if(sortByPriority){ 
+
             return repository.findAllByOrderByPriorityCustom();
         }
-        return repository.findAll();
+
+         else return repository.findAll();
     }
 
     // POST new todo

@@ -14,10 +14,11 @@ public class TodoItem {
 
     private String description;
     private boolean completed;
-
+    
    
     private String category;
     private String priority; // LOW, MEDIUM, HIGH
+
 
     @CreationTimestamp
     private LocalDateTime createdAt;

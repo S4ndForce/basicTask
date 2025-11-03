@@ -5,7 +5,7 @@ function App() {
   
   const [todos, setTodos] = useState([]);
   const [newTodo, setNewTodo] = useState("");
-  //const [searchTerm, searchTodo]
+  const [searchTerm, setSearchTerm] = useState(""); //when I type a specific todo by name, it stores it in useState and then it sends it
 
   const updateTodo = async (todo) => {
     await axios.put(`http://localhost:8081/api/todos/${todo.id}`, { //use axios everytime you want the app to remember something
@@ -16,6 +16,8 @@ function App() {
     });
     fetchTodos(); //refreshes my todos from the back end everytime i update it on the front
   };
+
+  
 
   useEffect(() => {
     fetchTodos();
@@ -30,6 +32,11 @@ function App() {
 
   
 };
+
+const searchTodo = async () =>{
+  const res = await axios.get(`http://localhost:8081/api/todos?search=${searchTerm}`); //makes a GET request to filter the Todo items
+  setTodos(res.data.map((t) => ({ ...t, isEditing: false }))); //closes the editing feature
+}
 
   //default variables
   const [priority, setPriority] = useState("LOW");
@@ -133,8 +140,8 @@ function App() {
         <div className="flex flex-col mb-6 items-end space-y-2">
           <button
             onClick={() => {
-              setSortByPriority(true); //makes it persistent by re-rendering the program instead of just useState which doesn't re render it and always has a default of false
-              fetchTodos(true)}} //on click call the function and mark it true () => is an anynymous function.
+              setSortByPriority(true); // makes it persistent by re-rendering the program instead of just useState which doesn't re render it and always has a default of false
+              fetchTodos(true)}} // on click call the function and mark it true () => is an anonymous function.
             className="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition w-20 text-center"
           >
             Sort
@@ -154,9 +161,6 @@ function App() {
 
         
 </div>
-
-
-
         <ul className="space-y-3">
           {todos.map((todo) => (
             <li
@@ -294,20 +298,32 @@ function App() {
                       Delete Completed
                     </button>
                   </div>
-      <div 
-      className="flex items-center space-x-2 mb-4">
+      <div className="absolute top-8 right-8 flex items-center space-x-2">
           <input
             type="text"
-            
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)} //updates react values
+            onKeyDown={(e) => {
+            if (e.key === "Enter") searchTodo();
+            }}
             placeholder="Search for a todo"
             className="w-64 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
           <button
+            onClick={searchTodo}
             className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
           >
             Search
           </button>
-</div>
+
+          <button
+            //onClick={clearTodo}
+            //className= something under the search button
+          >
+            Clear
+
+          </button>
+      </div>
 
     
     </div>
