@@ -5,7 +5,8 @@ function App() {
   
   const [todos, setTodos] = useState([]);
   const [newTodo, setNewTodo] = useState("");
-  const [searchTerm, setSearchTerm] = useState(""); //when I type a specific todo by name, it stores it in useState and then it sends it
+
+  
 
   const updateTodo = async (todo) => {
     await axios.put(`http://localhost:8081/api/todos/${todo.id}`, { //use axios everytime you want the app to remember something
@@ -25,15 +26,17 @@ function App() {
 
 
   //get button
-  const fetchTodos = async (sort = sortByPriority) => {
-  const res = await axios.get(`http://localhost:8081/api/todos?sortByPriority=${sort}`);
+  const fetchTodos = async (sort = sortByPriority, search = searchTerm) => {
+    console.log("Fetching todos. Sort:", sort);
+  const res = await axios.get(`http://localhost:8081/api/todos?search=${searchTerm}&sortByPriority=${sort}`);
+      console.log("Received:", res.data);
   setTodos(res.data.map((t) => ({ ...t, isEditing: false })));
   
 
   
 };
 
-const searchTodo = async () =>{
+const searchTodo = async (term = searchTerm) =>{
   const res = await axios.get(`http://localhost:8081/api/todos?search=${searchTerm}`); //makes a GET request to filter the Todo items
   setTodos(res.data.map((t) => ({ ...t, isEditing: false }))); //closes the editing feature
 }
@@ -42,7 +45,12 @@ const searchTodo = async () =>{
   const [priority, setPriority] = useState("LOW");
   const [category, setCategory] = useState("General");
   const [sortByPriority, setSortByPriority] = useState(false);
-  
+  const [searchTerm, setSearchTerm] = useState(""); //when I type a specific todo by name, it stores it in useState and then it sends it
+  useEffect(() => {
+  if (searchTerm === "") {
+    fetchTodos();  // when cleared, reload all
+  }
+}, [searchTerm]);
 
   const addTodo = async () => {
     if (!newTodo.trim()) return;
@@ -317,8 +325,10 @@ const searchTodo = async () =>{
           </button>
 
           <button
-            //onClick={clearTodo}
-            //className= something under the search button
+            onClick={() => {
+            setSearchTerm("");
+            }}
+             className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
           >
             Clear
 
