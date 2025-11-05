@@ -90,6 +90,7 @@ const searchTodo = async (term = searchTerm) =>{
 
   return (
     
+    
     <div className="n bg-gray-100 flex  justify-start pt-70 pl-5">  {/*Parent container that determines size of everything else */}
     {/*flex puts everything in one line, items center alligns children, space x-2 uniform space between children */}
       <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-4xl">
@@ -294,10 +295,25 @@ const searchTodo = async (term = searchTerm) =>{
         </ul>
       
       </div>
-       <div
+
+      {todos.some(t => t.completed) && (
+        <div
+          className = "fixed right-6 bottom-28 transition-all duration-500 ease-in-out transform translate-x-0 opacity-100"
+        >
+          <button
+               onClick={deleteCompleted}
+               className="bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-red-600 transition"
+          >
+                Delete Completed
+              </button>
+         </div>
+        
+      )}
+
+       {/*<div
     className={`absolute right-0 top-1/2 transform -translate-y-1/2 
                 transition-all duration-500 ease-in-out 
-                ${todos.some(t => t.completed) ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"}`}
+                ${todos.some(t => t.completed) ? "translate-x-0 opacity-100" : "translate-x-24 opacity-0"}`}
                   >
                     <button
                       onClick={deleteCompleted}
@@ -306,6 +322,7 @@ const searchTodo = async (term = searchTerm) =>{
                       Delete Completed
                     </button>
                   </div>
+       */}
       <div className="absolute top-8 right-8 flex items-center space-x-2">
           <input
             type="text"
@@ -337,6 +354,7 @@ const searchTodo = async (term = searchTerm) =>{
 
     
     </div>
+    
   );
 }
 
