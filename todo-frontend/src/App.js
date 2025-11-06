@@ -1,45 +1,49 @@
-import React, { useEffect, useState } from "react"; //state management variables
-import axios from "axios"; 
-let currentState = false;
+import {
+  fetchTodos,
+  addTodo,
+  updateTodo,
+  deleteTodo,
+  deleteCompleted,
+  toggleTodo
+} from "./services/todoService";
+
+import React, { useState, useEffect } from "react";
+
 function App() {
-  
-  const [todos, setTodos] = useState([]);
-  const [newTodo, setNewTodo] = useState("");
-
-  
-
-  const updateTodo = async (todo) => {
-    await axios.put(`http://localhost:8081/api/todos/${todo.id}`, { //use axios everytime you want the app to remember something
-      description: todo.description,
-      completed: todo.completed,
-      category: todo.category,
-      priority: todo.priority,
-    });
-    fetchTodos(); //refreshes my todos from the back end everytime i update it on the front
-  };
-
-  
-
-  useEffect(() => {
-    fetchTodos();
-  }, []);
+const [todos, setTodos] = useState([]);
+const [newTodo, setNewTodo] = useState("");
 
 
-  //get button
-  const fetchTodos = async (sort = sortByPriority, search = searchTerm) => {
-    console.log("Fetching todos. Sort:", sort);
-  const res = await axios.get(`http://localhost:8081/api/todos?search=${searchTerm}&sortByPriority=${sort}`);
-      console.log("Received:", res.data);
-  setTodos(res.data.map((t) => ({ ...t, isEditing: false })));
-  
 
-  
+const handleAddTodo = async () => { 
+  if(!newTodo.trim()) return;
+  await addTodo({
+    description: newTodo, completed: false, category, priority
+  });
+  setNewTodo("");
+  loadTodos();
+}
+
+const handleToggle = async (id, completed) => {
+  const todo =todos.find(t => t.id === id);
+  await toggleTodo(id,{... todo, completed});
+  loadTodos();
+}
+
+  const handleDelete = async (id) => {
+    await deleteTodo(id);
+    loadTodos();
 };
 
-const searchTodo = async (term = searchTerm) =>{
-  const res = await axios.get(`http://localhost:8081/api/todos?search=${searchTerm}`); //makes a GET request to filter the Todo items
-  setTodos(res.data.map((t) => ({ ...t, isEditing: false }))); //closes the editing feature
-}
+  const handleDeleteCompleted = async () =>{
+    await deleteCompleted(todos);
+    loadTodos();
+};
+
+ 
+
+ 
+
 
   //default variables
   const [priority, setPriority] = useState("LOW");
@@ -48,45 +52,32 @@ const searchTodo = async (term = searchTerm) =>{
   const [searchTerm, setSearchTerm] = useState(""); //when I type a specific todo by name, it stores it in useState and then it sends it
   useEffect(() => {
   if (searchTerm === "") {
-    fetchTodos();  // when cleared, reload all
+    loadTodos();  // when cleared, reload all
   }
+  }, [searchTerm]);
+
+
+  useEffect(() => {
+  loadTodos();           
+}, [sortByPriority]);
+
+
+useEffect(() => {
+  loadTodos();          
 }, [searchTerm]);
 
-  const addTodo = async () => {
-    if (!newTodo.trim()) return;
-        await axios.post("http://localhost:8081/api/todos", {
-          description: newTodo,
-          completed: false,
-          category,
-          priority,
-        });
-    setNewTodo("");
-    fetchTodos();
-  };
+  useEffect(() => {
+    loadTodos();
+  }, []);
 
-  //delete item
-  const deleteTodo = async (id) => { // delete the function when deleteTodo is called, wrapped in a function, await and async just wiat to get a response
-    await axios.delete(`http://localhost:8081/api/todos/${id}`);
-    fetchTodos();
-  };
+  
+const loadTodos = async () => {
+  const res = await fetchTodos(searchTerm, sortByPriority);
+  setTodos(res.data.map(t => ({ ...t, isEditing: false })));
+};
 
-  const deleteCompleted = async (id) => {
-      const completedTodos = todos.filter(t => t.completed); //completes code based on filters
-      for(const todo of completedTodos){
-        await axios.delete(`http://localhost:8081/api/todos/${todo.id}`);
-      }
-      fetchTodos();
-  }
 
-  //change to-do item
-  const toggleTodo = async (id, completed) => {
-    const todo = todos.find((t) => t.id === id); //finds the todo to checkmark
-    await axios.put(`http://localhost:8081/api/todos/${id}`, { //await feature makes sure the backend actually updates before moving on
-      ...todo,
-      completed,
-    });
-    fetchTodos();
-  };
+  
 
   return (
     
@@ -104,7 +95,10 @@ const searchTodo = async (term = searchTerm) =>{
           value={newTodo}
           onChange={(e) => setNewTodo(e.target.value)}
           onKeyDown={(e) => {
-            if (e.key === "Enter") addTodo();
+            if (e.key === "Enter") 
+              handleAddTodo();
+
+            
           }}
           placeholder="Enter a new task"
           className="flex-grow border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -141,7 +135,8 @@ const searchTodo = async (term = searchTerm) =>{
         </select>
 
         <button
-          onClick={addTodo} 
+          onClick={handleAddTodo} 
+          set
           className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
         >
           Add
@@ -150,7 +145,8 @@ const searchTodo = async (term = searchTerm) =>{
           <button
             onClick={() => {
               setSortByPriority(true); // makes it persistent by re-rendering the program instead of just useState which doesn't re render it and always has a default of false
-              fetchTodos(true)}} // on click call the function and mark it true () => is an anonymous function.
+            
+            }} // on click call the function and mark it true () => is an anonymous function.
             className="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition w-20 text-center"
           >
             Sort
@@ -159,7 +155,8 @@ const searchTodo = async (term = searchTerm) =>{
           <button
             onClick={() => {
               setSortByPriority(false); 
-              fetchTodos(false)}}
+              
+            }}
             className="bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500 transition w-15 text-center"
           >
             Unsort
@@ -180,7 +177,7 @@ const searchTodo = async (term = searchTerm) =>{
                 <input
                   type="checkbox"
                   checked={todo.completed}
-                  onChange={() => toggleTodo(todo.id, !todo.completed)}
+                  onChange={() => handleToggle(todo.id, !todo.completed)}
                   className="mr-3 w-5 h-5 text-blue-500"
                 />
 
@@ -207,12 +204,11 @@ const searchTodo = async (term = searchTerm) =>{
 
                         // then act based on the actual input value
                         if (currentValue === "") {
-                          deleteTodo(todo.id);
+                          handleDelete(todo.id);
                         } else {
-                          updateTodo({
-                            ...todo,
-                            description: currentValue,
-                          });
+                          updateTodo(
+                            todo.id, { ...todo, description: currentValue }
+                          );
                         }
 
                         // finally close edit mode
@@ -271,7 +267,7 @@ const searchTodo = async (term = searchTerm) =>{
 
               <div className="flex items-center space-x-3">
                 <button
-                  onClick={() => deleteTodo(todo.id)}
+                  onClick={() => handleDelete(todo.id)}
                   className="text-red-500 hover:text-red-700 font-semibold transition"
                 >
                   Delete
@@ -301,7 +297,7 @@ const searchTodo = async (term = searchTerm) =>{
           className = "fixed right-6 bottom-28 transition-all duration-500 ease-in-out transform translate-x-0 opacity-100"
         >
           <button
-               onClick={deleteCompleted}
+               onClick={handleDeleteCompleted}
                className="bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-red-600 transition"
           >
                 Delete Completed
@@ -329,13 +325,13 @@ const searchTodo = async (term = searchTerm) =>{
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)} //updates react values
             onKeyDown={(e) => {
-            if (e.key === "Enter") searchTodo();
+            if (e.key === "Enter") loadTodos();;
             }}
             placeholder="Search for a todo"
             className="w-64 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
           <button
-            onClick={searchTodo}
+            onClick={() =>loadTodos()}
             className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
           >
             Search
