@@ -6,8 +6,10 @@ import {
   deleteCompleted,
   toggleTodo
 } from "./services/todoService";
-
+import TodoFilter from "./components/TodoFilter";
+import TodoList from "./components/TodoList";
 import React, { useState, useEffect } from "react";
+
 
 function App() {
 const [todos, setTodos] = useState([]);
@@ -50,6 +52,7 @@ const handleToggle = async (id, completed) => {
   const [category, setCategory] = useState("General");
   const [sortByPriority, setSortByPriority] = useState(false);
   const [searchTerm, setSearchTerm] = useState(""); //when I type a specific todo by name, it stores it in useState and then it sends it
+  const[filter, setFilter]=useState("ALL");
   useEffect(() => {
   if (searchTerm === "") {
     loadTodos();  // when cleared, reload all
@@ -76,6 +79,11 @@ const loadTodos = async () => {
   setTodos(res.data.map(t => ({ ...t, isEditing: false })));
 };
 
+const filteredTodos = todos.filter(todo => {
+  if(filter === "ACTIVE") return !todo.completed;
+  if(filter === "COMPLETED") return todo.completed;
+  return true;
+});
 
   
 
@@ -166,129 +174,15 @@ const loadTodos = async () => {
        
 
         
-</div>
-        <ul className="space-y-3">
-          {todos.map((todo) => (
-            <li
-              key={todo.id}
-              className="flex items-center justify-between bg-gray-50 px-4 py-2 rounded-lg shadow-sm"
-            >
-              <div className="flex items-center flex-grow">
-                <input
-                  type="checkbox"
-                  checked={todo.completed}
-                  onChange={() => handleToggle(todo.id, !todo.completed)}
-                  className="mr-3 w-5 h-5 text-blue-500"
-                />
+    </div>
+       <TodoFilter filter={filter} setFilter={setFilter} />
+      <TodoList
+        todos={filteredTodos}
+        onToggle={handleToggle}
+        onDelete={handleDelete}
+        onUpdate={updateTodo}
+      />
 
-                {todo.isEditing ? (
-                 <input
-                      type="text"
-                      value={todo.description}
-                      onChange={(e) =>
-                        setTodos(
-                          todos.map((t) =>
-                            t.id === todo.id ? { ...t, description: e.target.value } : t
-                          )
-                        )
-                      }
-                      onBlur={(e) => {
-                        const currentValue = e.target.value.trim();
-
-                        // update React state immediately
-                        setTodos(
-                          todos.map((t) =>
-                            t.id === todo.id ? { ...t, description: currentValue } : t
-                          )
-                        );
-
-                        // then act based on the actual input value
-                        if (currentValue === "") {
-                          handleDelete(todo.id);
-                        } else {
-                          updateTodo(
-                            todo.id, { ...todo, description: currentValue }
-                          );
-                        }
-
-                        // finally close edit mode
-                        setTodos((prev) =>
-                          prev.map((t) => ({ ...t, isEditing: false }))
-                        );
-                      }}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter") {
-                          const currentValue = e.target.value.trim();
-
-                          if (currentValue === "") {
-                            deleteTodo(todo.id);
-                          } else {
-                            updateTodo({
-                              ...todo,
-                              description: currentValue,
-                            });
-                          }
-
-                          setTodos((prev) =>
-                            prev.map((t) => ({ ...t, isEditing: false }))
-                          );
-                        } else if (e.key === "Escape") {
-                          setTodos((prev) =>
-                            prev.map((t) => ({ ...t, isEditing: false }))
-                          );
-                        }
-                      }}
-                      className="flex-grow border-b border-gray-400 focus:outline-none bg-transparent"
-                      autoFocus
-                      />
-
-                    
-                  
-                ) : (
-                  
-                  <span
-                    className={`flex-grow text-gray-800 ${
-                      todo.completed ? "line-through text-gray-400" : ""
-                    }`}
-                    onDoubleClick={() =>
-                      setTodos(
-                        todos.map((t) =>
-                          t.id === todo.id
-                            ? { ...t, isEditing: true }
-                            : t
-                        )
-                      )
-                    }
-                  >
-                    {todo.description}
-                  </span>
-                )}
-              </div>
-
-              <div className="flex items-center space-x-3">
-                <button
-                  onClick={() => handleDelete(todo.id)}
-                  className="text-red-500 hover:text-red-700 font-semibold transition"
-                >
-                  Delete
-                </button>
-              
-              
-                <span
-                  className={`px-2 py-1 rounded text-xs font-semibold ${
-                    todo.priority === "HIGH"
-                      ? "bg-red-100 text-red-600"
-                      : todo.priority === "MEDIUM"
-                      ? "bg-yellow-100 text-yellow-600"
-                      : "bg-green-100 text-green-600"
-                  }`}
-                >
-                  {todo.priority}
-                </span>
-              </div>
-            </li>
-          ))}
-        </ul>
       
       </div>
 
