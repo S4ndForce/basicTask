@@ -91,10 +91,10 @@ const filteredTodos = todos.filter(todo => {
   return (
     
     
-    <div className="n bg-gray-100 flex  justify-start pt-70 pl-5 items-start p-6">  {/*Parent container that determines size of everything else */}
+    <div className=" bg-gray-100 flex  justify-start pt-8 pl-5 items-start min-h-screen p-6 relative">  {/*Parent container that determines size of everything else */}
     {/*flex puts everything in one line, items center alligns children, space x-2 uniform space between children */}
-      <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-4xl">
-        <h1 className="text-3xl font-bold text-center mb-6 text-gray-800">
+      <div className="bg-white/95 rounded-2xl shadow-2xl p-8 w-full max-w-4xl space-y-6 border border-gray-200">
+        <h1 className="text-3xl font-bold text-center  text-gray-800">
           My To-do List
         </h1>
 
@@ -108,8 +108,12 @@ const filteredTodos = todos.filter(todo => {
       newTodo={newTodo}
       setCategory={setCategory}
      />
-
+     <p className="text-sm text-gray-500">
+      {todos.filter(t => !t.completed).length} tasks remaining
+    </p>
+<hr className="my-4 border-gray-200" />
       <TodoFilter filter={filter} setFilter={setFilter} />
+<hr className="my-4 border-gray-200" />
       <TodoList
         todos={filteredTodos}
         onToggle={handleToggle}

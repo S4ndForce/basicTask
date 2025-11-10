@@ -15,6 +15,7 @@ function TodoItem({ todo, onToggle, onDelete, onUpdate }) {
   };
 
   return (
+  <li className="transition-all duration-200 ease-in-out transform hover:scale-[1.01] hover:bg-gray-100">
     <li className="flex items-center justify-between bg-gray-50 px-4 py-2 rounded-lg shadow-sm">
       <div className="flex items-center flex-grow">
         <input
@@ -66,6 +67,7 @@ function TodoItem({ todo, onToggle, onDelete, onUpdate }) {
           {todo.priority}
         </span>
       </div>
+    </li>
     </li>
   );
 }

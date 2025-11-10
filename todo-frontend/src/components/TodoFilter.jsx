@@ -9,7 +9,7 @@ function TodoFilter({ filter, setFilter}) {
             onClick={() => setFilter("ALL")}
             className={`px-4 py-2 rounded-lg font-semibold transition ${
               filter === "ALL"
-                ? "bg-blue-500 text-white"
+                ? "bg-blue-500 text-white shadow-md scale-105"
                 : "bg-gray-200 text-gray-800 hover:bg-gray-300"
             }`}
           >
@@ -20,7 +20,7 @@ function TodoFilter({ filter, setFilter}) {
             onClick={() => setFilter("ACTIVE")}
             className={`px-4 py-2 rounded-lg font-semibold transition ${
               filter === "ACTIVE"
-                ? "bg-blue-500 text-white"
+                ? "bg-blue-500 text-white shadow-md scale-105"
                 : "bg-gray-200 text-gray-800 hover:bg-gray-300"
             }`}
           >
@@ -31,7 +31,7 @@ function TodoFilter({ filter, setFilter}) {
             onClick={() => setFilter("COMPLETED")}
             className={`px-4 py-2 rounded-lg font-semibold transition ${
               filter === "COMPLETED"
-                ? "bg-blue-500 text-white"
+                ? "bg-blue-500 text-white shadow-md scale-105"
                 : "bg-gray-200 text-gray-800 hover:bg-gray-300"
             }`}
           >
