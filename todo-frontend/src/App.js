@@ -8,10 +8,20 @@ import {
 } from "./services/todoService";
 import TodoFilter from "./components/TodoFilter";
 import TodoList from "./components/TodoList";
+import TodoSearch from "./components/TodoSearch";
 import React, { useState, useEffect } from "react";
+import TodoForm from "./components/TodoForm";
+
 
 
 function App() {
+
+  //default variables
+const [priority, setPriority] = useState("LOW");
+const [category, setCategory] = useState("General");
+const [sortByPriority, setSortByPriority] = useState(false);
+const [searchTerm, setSearchTerm] = useState(""); //when I type a specific todo by name, it stores it in useState and then it sends it
+const[filter, setFilter]=useState("ALL");
 const [todos, setTodos] = useState([]);
 const [newTodo, setNewTodo] = useState("");
 
@@ -32,35 +42,26 @@ const handleToggle = async (id, completed) => {
   loadTodos();
 }
 
-  const handleDelete = async (id) => {
+const handleDelete = async (id) => {
     await deleteTodo(id);
     loadTodos();
 };
 
-  const handleDeleteCompleted = async () =>{
+const handleDeleteCompleted = async () =>{
     await deleteCompleted(todos);
     loadTodos();
 };
 
- 
 
- 
-
-
-  //default variables
-  const [priority, setPriority] = useState("LOW");
-  const [category, setCategory] = useState("General");
-  const [sortByPriority, setSortByPriority] = useState(false);
-  const [searchTerm, setSearchTerm] = useState(""); //when I type a specific todo by name, it stores it in useState and then it sends it
-  const[filter, setFilter]=useState("ALL");
-  useEffect(() => {
+  
+useEffect(() => {
   if (searchTerm === "") {
     loadTodos();  // when cleared, reload all
   }
   }, [searchTerm]);
 
 
-  useEffect(() => {
+useEffect(() => {
   loadTodos();           
 }, [sortByPriority]);
 
@@ -90,92 +91,25 @@ const filteredTodos = todos.filter(todo => {
   return (
     
     
-    <div className="n bg-gray-100 flex  justify-start pt-70 pl-5">  {/*Parent container that determines size of everything else */}
+    <div className="n bg-gray-100 flex  justify-start pt-70 pl-5 items-start p-6">  {/*Parent container that determines size of everything else */}
     {/*flex puts everything in one line, items center alligns children, space x-2 uniform space between children */}
       <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-4xl">
         <h1 className="text-3xl font-bold text-center mb-6 text-gray-800">
           My To-do List
         </h1>
 
-        <div className="flex mb-4 space-x-2">
-        <input
-          type="text"
-          value={newTodo}
-          onChange={(e) => setNewTodo(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") 
-              handleAddTodo();
+      <TodoForm 
+      priority={priority} 
+      setPriority={setPriority} 
+      category={category} 
+      handleAddTodo= {handleAddTodo} 
+      setSortByPriority ={setSortByPriority}
+      setNewTodo={setNewTodo}
+      newTodo={newTodo}
+      setCategory={setCategory}
+     />
 
-            
-          }}
-          placeholder="Enter a new task"
-          className="flex-grow border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-        />
-
-        <select
-          id="priority"
-          value={priority}
-            onChange={(e) => {
-              setPriority(e.target.value);
-              e.target.blur(); // closes dropdown
-            }}
-          
-          className="border border-gray-300 rounded-lg px-2 py-2"
-        >
-          <option value="LOW">Low</option>
-          <option value="MEDIUM">Medium</option>
-          <option value="HIGH">High</option>
-        </select>
-
-        <select
-          id="category"
-          value={category}
-            onChange={(e) => {
-            setCategory(e.target.value);
-            e.target.blur(); // closes dropdown
-          }}
-          className="border border-gray-300 rounded-lg px-2 py-2"
-        >
-          <option value="General">General</option>
-          <option value="Work">Work</option>
-          <option value="Personal">Personal</option>
-          <option value="Fitness">Fitness</option>
-        </select>
-
-        <button
-          onClick={handleAddTodo} 
-          set
-          className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
-        >
-          Add
-        </button>
-        <div className="flex flex-col mb-6 items-end space-y-2">
-          <button
-            onClick={() => {
-              setSortByPriority(true); // makes it persistent by re-rendering the program instead of just useState which doesn't re render it and always has a default of false
-            
-            }} // on click call the function and mark it true () => is an anonymous function.
-            className="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition w-20 text-center"
-          >
-            Sort
-          </button>
-
-          <button
-            onClick={() => {
-              setSortByPriority(false); 
-              
-            }}
-            className="bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500 transition w-15 text-center"
-          >
-            Unsort
-          </button>
-        </div>
-
-       
-
-        
-    </div>
-       <TodoFilter filter={filter} setFilter={setFilter} />
+      <TodoFilter filter={filter} setFilter={setFilter} />
       <TodoList
         todos={filteredTodos}
         onToggle={handleToggle}
@@ -200,7 +134,23 @@ const filteredTodos = todos.filter(todo => {
         
       )}
 
-       {/*<div
+      <TodoSearch 
+      searchTerm={searchTerm}
+      setSearchTerm={setSearchTerm} 
+      loadTodos={loadTodos}
+       />
+
+    
+    
+    </div>
+    
+  );
+}
+
+export default App;
+
+
+{/*<div
     className={`absolute right-0 top-1/2 transform -translate-y-1/2 
                 transition-all duration-500 ease-in-out 
                 ${todos.some(t => t.completed) ? "translate-x-0 opacity-100" : "translate-x-24 opacity-0"}`}
@@ -212,40 +162,4 @@ const filteredTodos = todos.filter(todo => {
                       Delete Completed
                     </button>
                   </div>
-       */}
-      <div className="absolute top-8 right-8 flex items-center space-x-2">
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)} //updates react values
-            onKeyDown={(e) => {
-            if (e.key === "Enter") loadTodos();;
-            }}
-            placeholder="Search for a todo"
-            className="w-64 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-          />
-          <button
-            onClick={() =>loadTodos()}
-            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
-          >
-            Search
-          </button>
-
-          <button
-            onClick={() => {
-            setSearchTerm("");
-            }}
-             className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
-          >
-            Clear
-
-          </button>
-      </div>
-
-    
-    </div>
-    
-  );
-}
-
-export default App;
+ */}
