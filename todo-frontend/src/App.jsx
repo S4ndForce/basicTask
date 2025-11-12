@@ -91,15 +91,18 @@ const filteredTodos = todos.filter(todo => {
   return (
     
     
-    <div className=" bg-gray-100 flex  justify-start pt-8 pl-5 items-start min-h-screen p-6 pr-8 relative">  {/*Parent container that determines size of everything else */}
+    <div className=" bg-gray-100 flex  justify-start pt-8 pl-5 items-start min-h-screen p-6 pr-8 relative ">  {/*Parent container that determines size of everything else */}
     {/*flex puts everything in one line, items center alligns children, space x-2 uniform space between children */}
       <div className="bg-white/95 rounded-2xl shadow-2xl border border-gray-200 
-- p-6 w-[80%] max-w-3xl h-[550px] overflow-y-auto relative">
+       p-6 w-[80%] max-w-3xl h-[550px] overflow-hidden relative flex flex-col">
 
-       <div className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm pb-4 w-full  ">
-        <h1 className="text-3xl font-bold text-center  text-gray-800 mb-4">
+       <div className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm pb-4 w-full ">
+
+       <h1 className="text-3xl font-bold text-center  text-gray-800 mb-4">
+
           My To-do List
-        </h1>
+
+      </h1>
   
       <TodoForm 
       priority={priority} 
@@ -112,23 +115,29 @@ const filteredTodos = todos.filter(todo => {
       setCategory={setCategory}
      />
 
-     <p className="text-sm text-gray-500">
-      {todos.filter(t => !t.completed).length} tasks remaining
-    </p>
-<hr className="my-4 border-gray-200" />
+      <p className="text-sm text-gray-500">
+        {todos.filter(t => !t.completed).length} tasks remaining
+      </p>
+
+
+      <hr className="my-4 border-gray-200" />
+
       <TodoFilter filter={filter} setFilter={setFilter} />
-<hr className="my-4 border-gray-200" />
-      </div>
-<div className="relative z-0 bg-gray-50 rounded-lg p-2">
-    <div className="pt-2 relative z-0">
-     <TodoList
-        todos={filteredTodos}
-        onToggle={handleToggle}
-        onDelete={handleDelete}
-        onUpdate={updateTodo}
-      />
-    </div>
-  </div>    
+
+      <hr className="my-4 border-gray-200" />
+
+      </div> 
+
+      {/*sticky part */}
+
+      <div className="overflow-y-auto flex-grow p-6 bg-gray-50"> {/*allows for a seperate scrolling feature*/}
+        <TodoList
+            todos={filteredTodos}
+            onToggle={handleToggle}
+            onDelete={handleDelete}
+            onUpdate={updateTodo}
+        />
+        </div>
       </div>
 
       {todos.some(t => t.completed) && (
@@ -140,7 +149,8 @@ const filteredTodos = todos.filter(todo => {
                className="bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-red-600 transition"
           >
                 Delete Completed
-              </button>
+
+          </button>
          </div>
         
       )}
@@ -151,8 +161,6 @@ const filteredTodos = todos.filter(todo => {
       loadTodos={loadTodos}
        />
 
-    
-    
     </div>
     
   );
