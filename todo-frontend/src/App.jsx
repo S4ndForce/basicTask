@@ -77,7 +77,7 @@ useEffect(() => {
   
 const loadTodos = async () => {
   const res = await fetchTodos(searchTerm, sortByPriority);
-  setTodos(res.data.map(t => ({ ...t, isEditing: false })));
+  setTodos(res.data.map(t => ({...t, isEditing: false })));
 };
 
 const filteredTodos = todos.filter(todo => {
@@ -94,7 +94,7 @@ const filteredTodos = todos.filter(todo => {
     <div className=" bg-gray-100 flex  justify-start pt-8 pl-5 items-start min-h-screen p-6 pr-8 relative ">  {/*Parent container that determines size of everything else */}
     {/*flex puts everything in one line, items center alligns children, space x-2 uniform space between children */}
       <div className="bg-white/95 rounded-2xl shadow-2xl border border-gray-200 
-       p-6 w-[80%] max-w-3xl h-[550px] overflow-hidden relative flex flex-col">
+       p-6 w-[80%] max-w-3xl h-[650px] overflow-hidden relative flex flex-col">
 
        <div className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm pb-4 w-full ">
 
@@ -131,14 +131,17 @@ const filteredTodos = todos.filter(todo => {
       {/*sticky part */}
 
       <div className="overflow-y-auto flex-grow p-6 bg-gray-50"> {/*allows for a seperate scrolling feature*/}
+      
         <TodoList
             todos={filteredTodos}
             onToggle={handleToggle}
             onDelete={handleDelete}
             onUpdate={updateTodo}
         />
+        
         </div>
       </div>
+      
 
       {todos.some(t => t.completed) && (
         <div
