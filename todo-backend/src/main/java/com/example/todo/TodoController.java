@@ -48,6 +48,8 @@ public class TodoController {
                 .orElseThrow(() -> new RuntimeException("Todo not found: " + id));
         existing.setDescription(todo.getDescription());
         existing.setCompleted(todo.isCompleted());
+        existing.setCategory(todo.getCategory());
+        existing.setPriority(todo.getPriority());
         return repository.save(existing);
     }
 

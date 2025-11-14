@@ -14,11 +14,8 @@ public class TodoItem {
 
     private String description;
     private boolean completed;
-    
-   
-    private String category;
-    private String priority; // LOW, MEDIUM, HIGH
-
+    private String category;   
+    private String priority;   
 
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -26,43 +23,18 @@ public class TodoItem {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    // Constructors
     public TodoItem() {}
 
-    // Getters and setters
-    public Long getId() {
-        return id;
-    }
+    public Long getId() { return id; }
+    public String getDescription() { return description; }
+    public boolean isCompleted() { return completed; }
+    public String getCategory() { return category; }
+    public String getPriority() { return priority; }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public boolean isCompleted() {
-        return completed;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public String getPriority() {
-        return priority;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setCompleted(boolean completed) {
-        this.completed = completed;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public void setPriority(String priority) {
-        this.priority = priority;
-    }
+    public void setDescription(String description) { this.description = description; }
+    public void setCompleted(boolean completed) { this.completed = completed; }
+    public void setCategory(String category) { this.category = category; }
+    public void setPriority(String priority) { this.priority = priority; }
 }

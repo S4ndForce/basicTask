@@ -5,7 +5,7 @@ import { useState } from "react";
 
 function TodoSearch({ searchTerm, setSearchTerm, loadTodos }) {
   return (
-    <div className="ml-8 mt-4 flex flex-wrap items-center space-x-2 flex-shrink-0">
+    <div className="ml-8 mt-4 flex flex-wrap items-end space-x-2 flex-shrink-0">
       <input
         type="text"
         value={searchTerm}

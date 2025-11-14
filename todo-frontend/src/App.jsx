@@ -44,7 +44,7 @@ const handleAddTodo = async () => {
   });
   setNewTodo("");
   loadTodos();
-    loadAllTodos(); 
+  loadAllTodos(); 
 }
 
 const handleToggle = async (id, completed) => {
@@ -171,13 +171,13 @@ const filteredTodos = todos.filter(todo => {
          </div>
         
       )}
-
+<div className="ml-8">
       <TodoSearch 
       searchTerm={searchTerm}
       setSearchTerm={setSearchTerm} 
       loadTodos={loadTodos}
        />
-
+</div>
     </div>
     
   );
