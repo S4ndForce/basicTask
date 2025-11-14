@@ -114,11 +114,11 @@ const filteredTodos = todos.filter(todo => {
       newTodo={newTodo}
       setCategory={setCategory}
      />
-
+        <div className="flex justify-end w-full">
       <p className="text-sm text-gray-500">
         {todos.filter(t => !t.completed).length} tasks remaining
       </p>
-
+        </div>
 
       <hr className="my-4 border-gray-200" />
 

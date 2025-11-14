@@ -2,7 +2,8 @@ import React from "react";
 
 function TodoForm({priority, setPriority, category, handleAddTodo, setSortByPriority, setCategory,setNewTodo, newTodo}){
     return(
-         <div className="flex mb-4 space-x-2">
+         <div className="flex flex-col space-y-3">
+          <div className=" flex space-x-3">
         <input
           type="text"
           value={newTodo}
@@ -52,7 +53,14 @@ function TodoForm({priority, setPriority, category, handleAddTodo, setSortByPrio
         >
           Add
         </button>
-        <div className="flex flex-col mb-6 items-end space-y-2">
+
+        </div>
+        
+
+         
+
+         <div className="flex space-x-3">
+            
           <button
             onClick={() => {
               setSortByPriority(true); // makes it persistent by re-rendering the program instead of just useState which doesn't re render it and always has a default of false
@@ -74,5 +82,7 @@ function TodoForm({priority, setPriority, category, handleAddTodo, setSortByPrio
           </button>
         </div>
     </div>
+
+          
     )
 } export default TodoForm;
