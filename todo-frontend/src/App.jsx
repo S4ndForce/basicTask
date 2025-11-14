@@ -24,6 +24,16 @@ const [searchTerm, setSearchTerm] = useState(""); //when I type a specific todo 
 const[filter, setFilter]=useState("ALL");
 const [todos, setTodos] = useState([]);
 const [newTodo, setNewTodo] = useState("");
+const [allTodos, setAllTodos] = useState([]);
+
+const loadAllTodos = async () => {
+    const res = await fetchTodos("", false); //no searching or sorting
+    setAllTodos(res.data);
+};
+useEffect(() => {
+loadAllTodos();
+
+}, [])
 
 
 
@@ -34,22 +44,26 @@ const handleAddTodo = async () => {
   });
   setNewTodo("");
   loadTodos();
+    loadAllTodos(); 
 }
 
 const handleToggle = async (id, completed) => {
   const todo =todos.find(t => t.id === id);
   await toggleTodo(id,{... todo, completed});
   loadTodos();
+    loadAllTodos(); 
 }
 
 const handleDelete = async (id) => {
     await deleteTodo(id);
     loadTodos();
+      loadAllTodos(); 
 };
 
 const handleDeleteCompleted = async () =>{
     await deleteCompleted(todos);
     loadTodos();
+      loadAllTodos(); 
 };
 
 
@@ -116,7 +130,7 @@ const filteredTodos = todos.filter(todo => {
      />
         <div className="flex justify-end w-full">
       <p className="text-sm text-gray-500">
-        {todos.filter(t => !t.completed).length} tasks remaining
+        {allTodos.filter(t => !t.completed).length} tasks remaining
       </p>
         </div>
 
