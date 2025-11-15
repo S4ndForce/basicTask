@@ -6,10 +6,10 @@ const API_URL =  "http://localhost:8081/api/todos";
 
 
 
-export const updateTodo = (id, todo) => {
-    return axios.put(`${API_URL}/${id}`, todo);
+export const updateTodo = (id, changes) => 
+     axios.patch(`${API_URL}/${id}`, changes);
     
-};
+;
 
 export const toggleTodo = async (id, todo) => {
     return axios.put(`${API_URL}/${id}`, todo);

@@ -65,4 +65,29 @@ public class TodoController {
 
 
     }
+    @PatchMapping("/{id}")
+public TodoItem patchTodo(@PathVariable Long id,
+                          @RequestBody UpdateTodoRequest changes) {
+
+    TodoItem existing = repository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Todo not found: " + id));
+
+    if (changes.getDescription() != null) {
+        existing.setDescription(changes.getDescription());
+    }
+
+    if (changes.getCompleted() != null) {
+        existing.setCompleted(changes.getCompleted());
+    }
+
+    if (changes.getCategory() != null) {
+        existing.setCategory(changes.getCategory());
+    }
+
+    if (changes.getPriority() != null) {
+        existing.setPriority(changes.getPriority());
+    }
+
+    return repository.save(existing);
+}
     }
