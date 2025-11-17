@@ -66,6 +66,11 @@ const handleDeleteCompleted = async () =>{
       loadAllTodos(); 
 };
 
+const handleUpdate = async (id, updatedTodo) => {
+  await updateTodo(id, updatedTodo);
+  loadTodos();
+  loadAllTodos(); // only if you use this
+};
 
   
 useEffect(() => {
@@ -74,6 +79,7 @@ useEffect(() => {
   }
   }, [searchTerm]);
 
+  
 
 useEffect(() => {
   loadTodos();           
@@ -93,6 +99,7 @@ const loadTodos = async () => {
   const res = await fetchTodos(searchTerm, sortByPriority);
   setTodos(res.data.map(t => ({...t, isEditing: false })));
 };
+
 
 const filteredTodos = todos.filter(todo => {
   if(filter === "ACTIVE") return !todo.completed;
@@ -150,7 +157,8 @@ const filteredTodos = todos.filter(todo => {
             todos={filteredTodos}
             onToggle={handleToggle}
             onDelete={handleDelete}
-            onUpdate={updateTodo}
+            onUpdate={handleUpdate}
+            
         />
         
         </div>

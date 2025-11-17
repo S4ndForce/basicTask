@@ -1,5 +1,5 @@
 package com.example.todo;
-
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -16,24 +16,8 @@ public class TodoController {
     }
 
     // GET all todos
-    @GetMapping
-    public List<TodoItem> getAllTodos(
-        @RequestParam(required = false, defaultValue = "false") boolean sortByPriority,
-        @RequestParam(required = false) String search
-        ){
-            
-       
-        if(search != null && !search.isEmpty()){ 
-
-            return repository.findByDescriptionContainingIgnoreCase(search);
-        }
-        else if(sortByPriority){ 
-
-            return repository.findAllByOrderByPriorityCustom();
-        }
-
-         else return repository.findAll();
-    }
+    
+    
 
     // POST new todo
     @PostMapping
@@ -90,4 +74,55 @@ public TodoItem patchTodo(@PathVariable Long id,
 
     return repository.save(existing);
 }
+
+    @GetMapping
+    public List<TodoItem> getAllTodos(
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) String sortBy,
+            @RequestParam(required = false, defaultValue = "asc") String direction
+    ) {
+
+    boolean hasSearch = (search != null && !search.isBlank());
+
+    // 1. PRIORITY sorting uses custom query
+    if ("priority".equalsIgnoreCase(sortBy)) {
+        if (hasSearch) {
+            // later we'll add support for search + custom priority
+            return repository.findByDescriptionContainingIgnoreCase(search);
+        }
+        return repository.findAllByOrderByPriorityCustom();
     }
+
+    // 2. Resolve which column to sort by
+    String sortField = resolveSortProperty(sortBy);
+
+    // 3. Determine direction
+    Sort sort = "desc".equalsIgnoreCase(direction)
+            ? Sort.by(Sort.Direction.DESC, sortField)
+            : Sort.by(Sort.Direction.ASC, sortField);
+
+    // 4. Search + sort
+    if (hasSearch) {
+        return repository.findByDescriptionContainingIgnoreCase(search, sort);
+    }
+
+    // 5. Just sort
+    return repository.findAll(sort);
+    }
+
+    private String resolveSortProperty(String sortBy) {
+        if (sortBy == null || sortBy.isBlank()) {
+            return "createdAt";   // default sorting
+        }
+
+        switch (sortBy) {
+            case "createdAt":
+            case "updatedAt":
+            case "description":
+            case "category":
+                return sortBy;
+            default:
+                return "createdAt";
+        }
+    }
+ }

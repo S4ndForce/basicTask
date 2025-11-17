@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-function TodoItem({ todo, onToggle, onDelete, onUpdate }) {
+function TodoItem({ todo, onToggle, onDelete, onUpdate, }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editedDesc, setEditedDesc] = useState(todo.description);
 
@@ -8,11 +8,16 @@ function TodoItem({ todo, onToggle, onDelete, onUpdate }) {
     const trimmed = editedDesc.trim();
     if (trimmed === "") {
       onDelete(todo.id);
+      
     } else {
       onUpdate(todo.id, { ...todo, description: trimmed });
+      
     }
     setIsEditing(false);
   };
+
+
+
 
   return (
   <li className="transition-all duration-200 ease-in-out transform hover:scale-[1.01] hover:bg-gray-100">

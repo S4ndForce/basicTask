@@ -1,7 +1,7 @@
 import React from "react";
 import TodoItem from "./TodoItem";
 
-function TodoList({ todos, onToggle, onDelete, onUpdate}) {
+function TodoList({ todos, onToggle, onDelete, onUpdate, }) {
 
 return(
     <ul className="space-y-3">
@@ -12,9 +12,10 @@ return(
                 onToggle={onToggle}
                 onDelete={onDelete}
                 onUpdate={onUpdate}
+               
             />
         
-                
+
 
         ))}
     </ul>
