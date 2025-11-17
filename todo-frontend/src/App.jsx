@@ -19,7 +19,7 @@ function App() {
   //default variables
 const [priority, setPriority] = useState("LOW");
 const [category, setCategory] = useState("General");
-const [sortByPriority, setSortByPriority] = useState(false);
+const [sort, setSort] = useState("");
 const [searchTerm, setSearchTerm] = useState(""); //when I type a specific todo by name, it stores it in useState and then it sends it
 const[filter, setFilter]=useState("ALL");
 const [todos, setTodos] = useState([]);
@@ -27,7 +27,7 @@ const [newTodo, setNewTodo] = useState("");
 const [allTodos, setAllTodos] = useState([]);
 
 const loadAllTodos = async () => {
-    const res = await fetchTodos("", false); //no searching or sorting
+    const res = await fetchTodos("", "priority"); //no searching or sorting
     setAllTodos(res.data);
 };
 useEffect(() => {
@@ -83,7 +83,7 @@ useEffect(() => {
 
 useEffect(() => {
   loadTodos();           
-}, [sortByPriority]);
+}, [sort]);
 
 
 useEffect(() => {
@@ -96,7 +96,7 @@ useEffect(() => {
 
   
 const loadTodos = async () => {
-  const res = await fetchTodos(searchTerm, sortByPriority);
+  const res = await fetchTodos(searchTerm, "priority");
   setTodos(res.data.map(t => ({...t, isEditing: false })));
 };
 
@@ -130,7 +130,7 @@ const filteredTodos = todos.filter(todo => {
       setPriority={setPriority} 
       category={category} 
       handleAddTodo= {handleAddTodo} 
-      setSortByPriority ={setSortByPriority}
+      setSortByPriority ={setSort}
       setNewTodo={setNewTodo}
       newTodo={newTodo}
       setCategory={setCategory}

@@ -1,6 +1,10 @@
 package com.example.todo;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Page;
 import java.util.List;
 
 @RestController
@@ -76,21 +80,28 @@ public TodoItem patchTodo(@PathVariable Long id,
 }
 
     @GetMapping
-    public List<TodoItem> getAllTodos(
+    public Page<TodoItem> getAllTodos(
             @RequestParam(required = false) String search,
             @RequestParam(required = false) String sortBy,
-            @RequestParam(required = false, defaultValue = "asc") String direction
+            @RequestParam(required = false, defaultValue = "asc") String direction,
+            @RequestParam(defaultValue = "0") int page,
+             @RequestParam(defaultValue = "10") int size
     ) {
 
     boolean hasSearch = (search != null && !search.isBlank());
 
     // 1. PRIORITY sorting uses custom query
     if ("priority".equalsIgnoreCase(sortBy)) {
+        List<TodoItem> list;
         if (hasSearch) {
             // later we'll add support for search + custom priority
-            return repository.findByDescriptionContainingIgnoreCase(search);
+            list = repository.findByDescriptionContainingIgnoreCase(search);
         }
-        return repository.findAllByOrderByPriorityCustom();
+        else{
+            list = repository.findAllByOrderByPriorityCustom();
+        }
+        
+         return new PageImpl<TodoItem>(list);
     }
 
     // 2. Resolve which column to sort by
@@ -101,13 +112,14 @@ public TodoItem patchTodo(@PathVariable Long id,
             ? Sort.by(Sort.Direction.DESC, sortField)
             : Sort.by(Sort.Direction.ASC, sortField);
 
+      Pageable pageable = PageRequest.of(page, size, sort);
     // 4. Search + sort
     if (hasSearch) {
-        return repository.findByDescriptionContainingIgnoreCase(search, sort);
+        return repository.findByDescriptionContainingIgnoreCase(search, pageable);
     }
 
     // 5. Just sort
-    return repository.findAll(sort);
+    return repository.findAll(pageable);
     }
 
     private String resolveSortProperty(String sortBy) {
@@ -123,6 +135,10 @@ public TodoItem patchTodo(@PathVariable Long id,
                 return sortBy;
             default:
                 return "createdAt";
+            case "id":
+                return "id";
         }
+        
     }
+    
  }
