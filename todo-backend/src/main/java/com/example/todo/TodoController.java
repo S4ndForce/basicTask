@@ -86,24 +86,25 @@ public TodoItem patchTodo(@PathVariable Long id,
             @RequestParam(required = false, defaultValue = "asc") String direction,
             @RequestParam(defaultValue = "0") int page,
              @RequestParam(defaultValue = "10") int size
+            
     ) {
-
+        
     boolean hasSearch = (search != null && !search.isBlank());
 
+     if ("priority".equalsIgnoreCase(sortBy) && hasSearch) {
+            Pageable pageable = PageRequest.of(page, size);
+            return repository.searchAndSortByPriority(search, pageable); 
+            }
+
+
     // 1. PRIORITY sorting uses custom query
-    if ("priority".equalsIgnoreCase(sortBy)) {
-        List<TodoItem> list;
-        if (hasSearch) {
-            // later we'll add support for search + custom priority
-            list = repository.findByDescriptionContainingIgnoreCase(search);
-        }
-        else{
-            list = repository.findAllByOrderByPriorityCustom();
-        }
-        
-         return new PageImpl<TodoItem>(list);
+    
+     if ("priority".equalsIgnoreCase(sortBy)) {
+        List<TodoItem> list = repository.findAllByOrderByPriorityCustom();
+        return new PageImpl<>(list, PageRequest.of(page, size), list.size());
     }
 
+   
     // 2. Resolve which column to sort by
     String sortField = resolveSortProperty(sortBy);
 
@@ -140,5 +141,6 @@ public TodoItem patchTodo(@PathVariable Long id,
         }
         
     }
+
     
  }

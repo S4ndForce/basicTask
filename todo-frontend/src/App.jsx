@@ -24,7 +24,7 @@ const [searchTerm, setSearchTerm] = useState(""); //when I type a specific todo 
 const[filter, setFilter]=useState("ALL");
 const [todos, setTodos] = useState([]);
 const [newTodo, setNewTodo] = useState("");
-const [allTodos, setAllTodos] = useState([]);
+
 const [direction, setDirection] = useState("asc");
 
 const [page, setPage] = useState(0);
@@ -39,16 +39,13 @@ const loadTodos = async () => {
     page,
     size)
   .then(res => {
-      setAllTodos(res.data.content);
       setTodos(res.data.content);
       setTotalPages(res.data.totalPages);
       setCurrentPage(res.data.number);
   });
 };
 
-useEffect(() => {
-loadAllTodos();
-}, [])
+
 
 
 
@@ -59,32 +56,32 @@ const handleAddTodo = async () => {
   });
   setNewTodo("");
   loadTodos();
-  loadAllTodos(); 
+  
 }
 
 const handleToggle = async (id, completed) => {
   const todo =todos.find(t => t.id === id);
   await toggleTodo(id,{... todo, completed});
   loadTodos();
-    loadAllTodos(); 
+    
 }
 
 const handleDelete = async (id) => {
     await deleteTodo(id);
     loadTodos();
-      loadAllTodos(); 
+     
 };
 
 const handleDeleteCompleted = async () =>{
     await deleteCompleted(todos);
     loadTodos();
-      loadAllTodos(); 
+      
 };
 
 const handleUpdate = async (id, updatedTodo) => {
   await updateTodo(id, updatedTodo);
   loadTodos();
-  loadAllTodos(); // only if you use this
+   // only if you use this
 };
 
   
@@ -110,13 +107,10 @@ useEffect(() => {
   }, [searchTerm, sort, direction, page, size]);
 
   
-const loadAllTodos = async () => {
-  const res = await fetchTodos("", "");
-  setTodos((res.data.content || []).map(t => ({...t, isEditing: false })));
-};
 
 
-const filteredTodos = (allTodos || []).filter(todo => {
+
+const filteredTodos = (todos || []).filter(todo => {
   if(filter === "ACTIVE") return !todo.completed;
   if(filter === "COMPLETED") return todo.completed;
   return true;
@@ -152,7 +146,7 @@ const filteredTodos = (allTodos || []).filter(todo => {
      />
         <div className="flex justify-end w-full">
       <p className="text-sm text-gray-500">
-        {(allTodos || []).filter(t => !t.completed).length} tasks remaining
+        {filteredTodos.filter(t => !t.completed).length} tasks remaining
       </p>
         </div>
 

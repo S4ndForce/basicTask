@@ -26,5 +26,5 @@ void deleteByCompletedTrue();
 List<TodoItem> findByDescriptionContainingIgnoreCase(String search);
 List<TodoItem> findByDescriptionContainingIgnoreCase(String search, Sort sort);
 Page<TodoItem> findByDescriptionContainingIgnoreCase(String search, Pageable pageable);
-    //to be completed : search query, and notifcations/times to be completed
+Page<TodoItem> searchAndSortByPriority(String search, Pageable pageable);
 }
