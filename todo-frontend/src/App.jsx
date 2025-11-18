@@ -18,21 +18,36 @@ function App() {
 
   //default variables
 const [priority, setPriority] = useState("LOW");
-const [category, setCategory] = useState("General");
-const [sort, setSort] = useState("");
+const [category, setCategory] = useState("GENERAL");
+const [sort, setSort] = useState("createdAt");
 const [searchTerm, setSearchTerm] = useState(""); //when I type a specific todo by name, it stores it in useState and then it sends it
 const[filter, setFilter]=useState("ALL");
 const [todos, setTodos] = useState([]);
 const [newTodo, setNewTodo] = useState("");
 const [allTodos, setAllTodos] = useState([]);
+const [direction, setDirection] = useState("asc");
 
-const loadAllTodos = async () => {
-    const res = await fetchTodos("", "priority"); //no searching or sorting
-    setAllTodos(res.data);
+const [page, setPage] = useState(0);
+const [size, setSize] = useState(10);
+
+const [totalPages, setTotalPages] = useState(0);
+const [currentPage, setCurrentPage] = useState(0);
+const loadTodos = async () => {
+    fetchTodos( searchTerm,
+    sort,        
+    direction,
+    page,
+    size)
+  .then(res => {
+      setAllTodos(res.data.content);
+      setTodos(res.data.content);
+      setTotalPages(res.data.totalPages);
+      setCurrentPage(res.data.number);
+  });
 };
+
 useEffect(() => {
 loadAllTodos();
-
 }, [])
 
 
@@ -92,16 +107,16 @@ useEffect(() => {
 
   useEffect(() => {
     loadTodos();
-  }, []);
+  }, [searchTerm, sort, direction, page, size]);
 
   
-const loadTodos = async () => {
-  const res = await fetchTodos(searchTerm, "priority");
-  setTodos(res.data.map(t => ({...t, isEditing: false })));
+const loadAllTodos = async () => {
+  const res = await fetchTodos("", "");
+  setTodos((res.data.content || []).map(t => ({...t, isEditing: false })));
 };
 
 
-const filteredTodos = todos.filter(todo => {
+const filteredTodos = (allTodos || []).filter(todo => {
   if(filter === "ACTIVE") return !todo.completed;
   if(filter === "COMPLETED") return todo.completed;
   return true;
@@ -137,7 +152,7 @@ const filteredTodos = todos.filter(todo => {
      />
         <div className="flex justify-end w-full">
       <p className="text-sm text-gray-500">
-        {allTodos.filter(t => !t.completed).length} tasks remaining
+        {(allTodos || []).filter(t => !t.completed).length} tasks remaining
       </p>
         </div>
 

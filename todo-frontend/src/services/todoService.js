@@ -16,10 +16,16 @@ export const toggleTodo = async (id, todo) => {
    
 };
 
-export const fetchTodos = (search = "", sortBy = "createdAt", direction = "asc") => {
-    return axios.get(
-        `${API_URL}?search=${search}&sortBy=${sortBy}&direction=${direction}`
-    );
+export const fetchTodos = (
+  search = "",
+  sortBy = "createdAt",
+  direction = "asc",
+  page = 0,
+  size = 10
+) => {
+  return axios.get(
+    `${API_URL}?search=${search}&sortBy=${sortBy}&direction=${direction}&page=${page}&size=${size}`
+  );
 };
 
 export const addTodo = (todo) =>{

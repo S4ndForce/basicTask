@@ -1,7 +1,9 @@
 import React from "react";
 
 function TodoForm({priority, setPriority, category, handleAddTodo, setSortByPriority, setCategory,setNewTodo, newTodo}){
+  const categories = ["GENERAL", "WORK", "SCHOOL", "PERSONAL", "HEALTH"];
     return(
+      
          <div className="flex flex-col space-y-3">
           <div className=" flex space-x-3">
         <input
@@ -40,10 +42,11 @@ function TodoForm({priority, setPriority, category, handleAddTodo, setSortByPrio
           }}
           className="border border-gray-300 rounded-lg px-2 py-2"
         >
-          <option value="General">General</option>
-          <option value="Work">Work</option>
-          <option value="Personal">Personal</option>
-          <option value="Fitness">Fitness</option>
+          {categories.map(c => (
+          <option key={c} value={c}>
+            {c.charAt(0) + c.slice(1).toLowerCase()}
+          </option>
+        ))}
         </select>
 
         <button
