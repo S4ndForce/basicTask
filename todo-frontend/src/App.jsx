@@ -24,6 +24,7 @@ const [searchTerm, setSearchTerm] = useState(""); //when I type a specific todo 
 const[filter, setFilter]=useState("ALL");
 const [todos, setTodos] = useState([]);
 const [newTodo, setNewTodo] = useState("");
+const [allTodos, setAllTodos] = useState([]);
 
 const [direction, setDirection] = useState("asc");
 
@@ -33,16 +34,19 @@ const [size, setSize] = useState(10);
 const [totalPages, setTotalPages] = useState(0);
 const [currentPage, setCurrentPage] = useState(0);
 const loadTodos = async () => {
-    fetchTodos( searchTerm,
+  
+   const res = await fetchTodos( searchTerm,
     sort,        
     direction,
     page,
-    size)
-  .then(res => {
-      setTodos(res.data.content);
+    size);
+      const items = res.data.content || [];
+   {
+      setAllTodos(items);
+      setTodos(items);
       setTotalPages(res.data.totalPages);
       setCurrentPage(res.data.number);
-  });
+  };
 };
 
 
@@ -93,24 +97,18 @@ useEffect(() => {
 
   
 
-useEffect(() => {
-  loadTodos();           
-}, [sort]);
 
 
-useEffect(() => {
-  loadTodos();          
-}, [searchTerm]);
 
   useEffect(() => {
-    loadTodos();
+    loadTodos(searchTerm, sort, direction, page, size);
   }, [searchTerm, sort, direction, page, size]);
 
   
 
 
 
-const filteredTodos = (todos || []).filter(todo => {
+const filteredTodos = (allTodos || []).filter(todo => {
   if(filter === "ACTIVE") return !todo.completed;
   if(filter === "COMPLETED") return todo.completed;
   return true;
