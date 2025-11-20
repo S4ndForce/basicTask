@@ -2,6 +2,7 @@ import React from "react";
 
 function TodoForm({priority, setPriority, category, handleAddTodo, setSortByPriority, setCategory,setNewTodo, newTodo}){
   const categories = ["GENERAL", "WORK", "SCHOOL", "PERSONAL", "HEALTH"];
+  const priorities = ["HIGH", "MEDIUM", "LOW"];
     return(
       
          <div className="flex flex-col space-y-3">
@@ -28,9 +29,11 @@ function TodoForm({priority, setPriority, category, handleAddTodo, setSortByPrio
           
           className="border border-gray-300 rounded-lg px-2 py-2"
         >
-          <option value="LOW">Low</option>
-          <option value="MEDIUM">Medium</option>
-          <option value="HIGH">High</option>
+          {priorities.map(c => (
+          <option key={c} value={c}>
+            {c.charAt(0) + c.slice(1).toLowerCase()}
+          </option>
+        ))}
         </select>
 
         <select

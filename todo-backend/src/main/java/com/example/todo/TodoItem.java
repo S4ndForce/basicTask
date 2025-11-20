@@ -14,9 +14,12 @@ public class TodoItem {
 
     private String description;
     private boolean completed;
+
     @Enumerated(EnumType.STRING)
     private Category category;  
-    private String priority;   
+
+    @Enumerated(EnumType.STRING)
+    private Priority priority;   
 
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -30,12 +33,12 @@ public class TodoItem {
     public String getDescription() { return description; }
     public boolean isCompleted() { return completed; }
     public Category getCategory() { return category; }
-    public String getPriority() { return priority; }
+    public Priority getPriority() { return priority; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }
 
     public void setDescription(String description) { this.description = description; }
     public void setCompleted(boolean completed) { this.completed = completed; }
     public void setCategory(Category category) { this.category = category; }
-    public void setPriority(String priority) { this.priority = priority; }
+    public void setPriority(Priority priority) { this.priority = priority; }
 }
