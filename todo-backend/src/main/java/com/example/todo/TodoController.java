@@ -18,7 +18,7 @@ public class TodoController {
     }
 
     @GetMapping
-    public Page<TodoResponse> getAll(
+    public PageResponse<TodoResponse> getAll(
             @RequestParam(required = false) String search,
             @RequestParam(required = false) String sortBy,
             @RequestParam(required = false, defaultValue = "asc") String direction,

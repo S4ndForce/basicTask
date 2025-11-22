@@ -15,7 +15,7 @@ public class TodoService {
         this.repo = repo;
     }
 
-    public Page<TodoResponse> getTodos(
+    public PageResponse<TodoResponse> getTodos(
             String search,
             String sortBy,
             String direction,
@@ -38,8 +38,15 @@ public class TodoService {
         else {
             page = repo.findAll(pageable);
         }
-
-        return page.map(TodoResponse::fromEntity);
+            var content = page.map(TodoResponse::fromEntity).toList(); //wraps Page into PageResposne dto
+        return new PageResponse<>(
+            //same thing just restricted in terms of page
+            content,
+            page.getNumber(), 
+            page.getSize(),
+            page.getTotalElements(),
+            page.getTotalPages()
+        );
     }
 
     public TodoResponse createTodo(CreateTodoRequest req) {
