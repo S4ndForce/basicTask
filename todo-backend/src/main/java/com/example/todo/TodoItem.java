@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.example.todo.Project.Project;
+
 @Entity
 public class TodoItem {
 
@@ -26,6 +28,11 @@ public class TodoItem {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    @ManyToOne
+    @JoinColumn(name ="project_id")
+    private Project project;
+    //add getters and setters for this
 
     public TodoItem() {}
 
