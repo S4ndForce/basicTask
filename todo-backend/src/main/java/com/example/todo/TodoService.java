@@ -1,7 +1,12 @@
 package com.example.todo;
 
-import com.example.todo.exceptions.TodoNotFound;
 import org.springframework.stereotype.Service;
+
+import com.example.todo.Exceptions.ProjectNotFound;
+import com.example.todo.Exceptions.TodoNotFound;
+import com.example.todo.Project.Project;
+import com.example.todo.Project.ProjectRepository;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import java.util.stream.Collectors;
@@ -10,11 +15,14 @@ import java.util.stream.Collectors;
 public class TodoService {
 
     private final TodoRepository repo;
+    
 
-    public TodoService(TodoRepository repo) {
-        this.repo = repo;
+    private final ProjectRepository projectRepo;
+
+    public TodoService(TodoRepository repo, ProjectRepository projectRepo) {
+    this.repo = repo;
+    this.projectRepo = projectRepo;
     }
-
     public PageResponse<TodoResponse> getTodos(
             String search,
             String sortBy,
@@ -55,6 +63,12 @@ public class TodoService {
         t.setCategory(req.getCategory());
         t.setPriority(req.getPriority());
         t.setCompleted(req.isCompleted());
+        // NEW: assign project if provided
+        if (req.getProjectId() != null) {
+        Project project = projectRepo.findById(req.getProjectId())
+                .orElseThrow(() -> new ProjectNotFound(req.getProjectId()));
+        t.setProject(project);
+    }
 
         return TodoResponse.fromEntity(repo.save(t));
     }
