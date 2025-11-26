@@ -11,6 +11,7 @@ public class TodoResponse {
     private Priority priority;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private Long projectId;
 
     public TodoResponse(
             Long id,
@@ -19,7 +20,8 @@ public class TodoResponse {
             Category category,
             Priority priority,
             LocalDateTime createdAt,
-            LocalDateTime updatedAt
+            LocalDateTime updatedAt,
+            Long projectId
     ) {
         this.id = id;
         this.description = description;
@@ -28,6 +30,7 @@ public class TodoResponse {
         this.priority = priority;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.projectId = projectId;
     }
 
     public Long getId() { return id; }
@@ -46,7 +49,8 @@ public class TodoResponse {
                 item.getCategory(),
                 item.getPriority(),
                 item.getCreatedAt(),
-                item.getUpdatedAt()
+                item.getUpdatedAt(), 
+                item.getProject() == null ? null : item.getProject().getId() 
         );
     }
 }

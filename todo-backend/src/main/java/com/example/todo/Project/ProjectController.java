@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.todo.TodoResponse;
+
 import jakarta.validation.Valid;
 
 
@@ -35,5 +37,10 @@ public class ProjectController {
     @GetMapping("/{id}")
     public ProjectResponse getById(@PathVariable Long id) {
         return service.getById(id);
+    }
+
+    @GetMapping("/{id}/todos")
+    public List<TodoResponse> getTodosByProject(@PathVariable Long id) {
+    return service.getTodosByProject(id);
     }
 }

@@ -93,6 +93,11 @@ public class TodoService {
         if (req.getCompleted() != null) t.setCompleted(req.getCompleted());
         if (req.getCategory() != null) t.setCategory(req.getCategory());
         if (req.getPriority() != null) t.setPriority(req.getPriority());
+        if (req.getProjectId() != null) {
+    Project project = projectRepo.findById(req.getProjectId())
+        .orElseThrow(() -> new ProjectNotFound(req.getProjectId()));
+    t.setProject(project);
+}
 
         return TodoResponse.fromEntity(repo.save(t));
     }

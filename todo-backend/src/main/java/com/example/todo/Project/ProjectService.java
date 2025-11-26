@@ -4,7 +4,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.example.todo.exceptions.ProjectNotFound;
+import com.example.todo.TodoResponse;
+import com.example.todo.Exceptions.ProjectNotFound;
 
 @Service
 public class ProjectService {
@@ -33,6 +34,15 @@ public class ProjectService {
         .orElseThrow(() -> new ProjectNotFound(id));
 
         return ProjectResponse.fromEntity(p);
+        //brilliant design
         
+    }
+
+
+    public List<TodoResponse> getTodosByProject(Long id){
+        Project p = repo.findById(id)
+        .orElseThrow(() -> new ProjectNotFound(id));
+
+        return p.getTodos().stream().map(TodoResponse::fromEntity).toList();
     }
 }

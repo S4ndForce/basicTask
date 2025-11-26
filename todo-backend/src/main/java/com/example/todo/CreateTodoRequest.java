@@ -15,6 +15,9 @@ public class CreateTodoRequest {
 
      @NotNull
     private Boolean completed;
+    private Long projectId; // <-- optional
+
+    public Long getProjectId() { return projectId; }
 
     public CreateTodoRequest() {}
 
