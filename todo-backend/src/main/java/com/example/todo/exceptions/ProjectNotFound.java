@@ -1,4 +1,4 @@
-package com.example.todo.exceptions;
+package com.example.todo.Exceptions;
 
 public class ProjectNotFound extends RuntimeException {
     public ProjectNotFound (Long id){

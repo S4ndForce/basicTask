@@ -1,4 +1,4 @@
-package com.example.todo.exceptions;
+package com.example.todo.Exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(TodoNotFoundException.class)
-    public ResponseEntity<?> handleNotFound(TodoNotFoundException ex) {
+    @ExceptionHandler(TodoNotFound.class)
+    public ResponseEntity<?> handleNotFound(TodoNotFound ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(new ErrorResponse(ex.getMessage()));
     }
