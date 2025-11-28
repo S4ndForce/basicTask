@@ -44,4 +44,5 @@ public interface TodoRepository extends JpaRepository<TodoItem, Long> {
     )
     Page<TodoItem> searchAndSortByPriority(String search, Pageable pageable);
     List<TodoItem> findByProjectId(Long projectId);
+    void deleteByProjectId(Long projectId);
 }

@@ -10,6 +10,8 @@ import com.example.todo.TodoRepository;
 import com.example.todo.TodoResponse;
 import com.example.todo.Exceptions.ProjectNotFound;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class ProjectService {
     private final ProjectRepository projectRepo;
@@ -73,9 +75,19 @@ public class ProjectService {
         Project p = projectRepo.findById(projectId)
         .orElseThrow(() -> new ProjectNotFound(projectId));
 
-        return projectRepo.findByProjectId(projectId)
+        return todoRepo.findByProjectId(projectId)
         .stream()
         .map(TodoResponse::fromEntity)
         .toList();
+    }
+
+
+    @Transactional
+    public void deleteById(Long projectId){
+        todoRepo.deleteByProjectId(projectId);
+        projectRepo.deleteById(projectId); //deleteById is a built in method
+        
+    
+
     }
 }

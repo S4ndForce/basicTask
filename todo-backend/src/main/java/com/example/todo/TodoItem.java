@@ -33,7 +33,8 @@ public class TodoItem {
     @JoinColumn(name ="project_id")
     private Project project;
     //add getters and setters for this
-
+    public Project getProject() { return project; }
+    public void setProject(Project project) { this.project = project; }
     public TodoItem() {}
 
     public Long getId() { return id; }

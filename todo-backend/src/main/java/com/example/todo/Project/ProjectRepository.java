@@ -13,5 +13,5 @@ import org.springframework.data.domain.Pageable;
 
 
 public interface ProjectRepository extends JpaRepository<Project, Long> {
-    List<TodoItem> findByProjectId(Long projectId);
+    
 }

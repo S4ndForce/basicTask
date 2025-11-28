@@ -1,4 +1,4 @@
-package com.example.todo.exceptions;
+package com.example.todo.Exceptions;
 
 public class ErrorResponse {
     private String message;

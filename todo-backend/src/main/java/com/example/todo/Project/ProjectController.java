@@ -3,6 +3,7 @@ package com.example.todo.Project;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -51,6 +52,11 @@ public class ProjectController {
     @GetMapping("/{id}")
     public ProjectResponse getById(@PathVariable Long id) {
         return service.getById(id);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteById(@PathVariable Long id){
+         service.deleteById(id);
     }
 
     
