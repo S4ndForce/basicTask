@@ -25,6 +25,8 @@ public interface TodoRepository extends JpaRepository<TodoItem, Long> {
     List<TodoItem> findByDescriptionContainingIgnoreCase(String search, Sort sort);
     Page<TodoItem> findByDescriptionContainingIgnoreCase(String search, Pageable pageable);
 
+
+    //custom queries to database
     @Query(
         value = """
             SELECT t FROM TodoItem t
@@ -41,4 +43,5 @@ public interface TodoRepository extends JpaRepository<TodoItem, Long> {
         """
     )
     Page<TodoItem> searchAndSortByPriority(String search, Pageable pageable);
+    List<TodoItem> findByProjectId(Long projectId);
 }
