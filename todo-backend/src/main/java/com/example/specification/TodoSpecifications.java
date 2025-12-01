@@ -1,8 +1,9 @@
 package com.example.specification;
-import java.util.Locale.Category;
+
 
 import org.springframework.data.jpa.domain.Specification;
 
+import com.example.todo.Category;
 import com.example.todo.Priority;
 import com.example.todo.TodoItem;
    

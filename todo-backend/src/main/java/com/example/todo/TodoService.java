@@ -6,11 +6,19 @@ import com.example.todo.Exceptions.ProjectNotFound;
 import com.example.todo.Exceptions.TodoNotFound;
 import com.example.todo.Project.Project;
 import com.example.todo.Project.ProjectRepository;
+import com.example.todo.dto.CreateTodoRequest;
+import com.example.todo.dto.PageResponse;
+import com.example.todo.dto.TodoFilter;
+import com.example.todo.dto.TodoResponse;
+import com.example.todo.dto.UpdateTodoRequest;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import java.util.stream.Collectors;
+import org.springframework.data.jpa.domain.Specification;
 
+import java.util.stream.Collectors;
+import com.example.specification.TodoSpecifications.*;
 @Service
 public class TodoService {
 
@@ -106,4 +114,6 @@ public class TodoService {
         if (!repo.existsById(id)) throw new TodoNotFound(id);
         repo.deleteById(id);
     }
+
+    
 }

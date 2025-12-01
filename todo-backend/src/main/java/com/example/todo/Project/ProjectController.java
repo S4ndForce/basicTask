@@ -1,6 +1,7 @@
 package com.example.todo.Project;
 
 import java.util.List;
+import com.example.todo.Category;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -9,10 +10,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.todo.CreateTodoRequest;
-import com.example.todo.TodoResponse;
+import com.example.todo.Priority;
+import com.example.todo.dto.CreateTodoRequest;
+import com.example.todo.dto.TodoFilter;
+import com.example.todo.dto.TodoResponse;
 
 import jakarta.validation.Valid;
 
@@ -40,9 +44,17 @@ public class ProjectController {
     
 
     @GetMapping("/{projectId}/todos")
-    public List<TodoResponse> getTodosByProject(@PathVariable Long projectId){
-        return service.getTodosByProject(projectId);
-    }
+    public List<TodoResponse> getTodosByProject(
+        @PathVariable Long projectId,
+        @RequestParam(required = false) Priority priority,
+        @RequestParam(required = false) Category category
+) {
+    TodoFilter filter = new TodoFilter();
+    filter.setPriority(priority);
+    filter.setCategory(category);
+
+    return service.getFilteredTodos(projectId, filter);
+}
 
     @GetMapping
     public List<ProjectResponse> getAll() {

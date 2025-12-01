@@ -1,4 +1,7 @@
-package com.example.todo;
+package com.example.todo.dto;
+
+import com.example.todo.Category;
+import com.example.todo.Priority;
 
 public class UpdateTodoRequest {
     private String description;

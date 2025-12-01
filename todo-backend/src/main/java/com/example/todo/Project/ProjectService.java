@@ -2,13 +2,20 @@ package com.example.todo.Project;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import com.example.todo.CreateTodoRequest;
+
+
+import static com.example.specification.TodoSpecifications.*;
 import com.example.todo.TodoItem;
 import com.example.todo.TodoRepository;
-import com.example.todo.TodoResponse;
 import com.example.todo.Exceptions.ProjectNotFound;
+import com.example.todo.dto.CreateTodoRequest;
+import com.example.todo.dto.TodoFilter;
+import com.example.todo.dto.TodoResponse;
 
 import jakarta.transaction.Transactional;
 
@@ -89,5 +96,16 @@ public class ProjectService {
         
     
 
+    }
+
+    public List<TodoResponse> getFilteredTodos(Long projectId, TodoFilter filter) {
+        Specification<TodoItem> spec = Specification
+        .allOf(belongsToProject(projectId))
+        .and(hasPriority(filter.getPriority()))
+        .and(hasCategory(filter.getCategory()));
+
+        
+
+        return todoRepo.findAll(spec).stream().map(TodoResponse::fromEntity).toList();
     }
 }

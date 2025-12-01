@@ -1,6 +1,10 @@
-package com.example.todo;
+package com.example.todo.dto;
 
 import java.time.LocalDateTime;
+
+import com.example.todo.Category;
+import com.example.todo.Priority;
+import com.example.todo.TodoItem;
 
 public class TodoResponse {
 
