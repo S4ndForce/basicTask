@@ -1,4 +1,7 @@
-package com.example.todo;
+package com.example.todo.dto;
+
+import com.example.todo.Category;
+import com.example.todo.Priority;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
