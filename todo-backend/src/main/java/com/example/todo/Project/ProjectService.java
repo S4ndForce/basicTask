@@ -98,14 +98,5 @@ public class ProjectService {
 
     }
 
-    public List<TodoResponse> getFilteredTodos(Long projectId, TodoFilter filter) {
-        Specification<TodoItem> spec = Specification
-        .allOf(belongsToProject(projectId))
-        .and(hasPriority(filter.getPriority()))
-        .and(hasCategory(filter.getCategory()));
-
-        
-
-        return todoRepo.findAll(spec).stream().map(TodoResponse::fromEntity).toList();
-    }
+    
 }

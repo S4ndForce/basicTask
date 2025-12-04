@@ -2,15 +2,23 @@ package com.example.todo.dto;
 
 import com.example.todo.Category;
 import com.example.todo.Priority;
-
+//The DTO for the specification entity  
 public class TodoFilter {
+
+
     private Priority priority;
     private Category category;
+    private String searchTerm;
+    private String sortBy;
      public TodoFilter() {}
 
 
     public Priority getPriority() {
         return priority;
+    }
+
+    public String getSearchTerm(){
+        return searchTerm;
     }
 
     public void setPriority(Priority priority) {
@@ -24,5 +32,13 @@ public class TodoFilter {
     public void setCategory(Category category) {
         this.category = category;
     }
+     public void setSearchTerm(String searchTerm) {
+        this.searchTerm = searchTerm;
+    }
+
+    public void setSortBy(String sortBy){
+        this.sortBy = sortBy;
+    }
+
 
 }

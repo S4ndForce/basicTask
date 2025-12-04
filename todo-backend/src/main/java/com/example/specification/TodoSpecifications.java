@@ -24,7 +24,9 @@ public class TodoSpecifications {
     }
 
     public static Specification<TodoItem> hasSearch(String searchTerm) {
-        return (root, query, cb) ->           //get the project's id from db
-            searchTerm == null ? null : cb.equal(root.get("description"), searchTerm);
-    }
+    return (root, query, cb) -> 
+        searchTerm == null || searchTerm.isEmpty() //check if empty or null
+            ? null
+            : cb.like(cb.lower(root.get("description")), "%" + searchTerm.toLowerCase() + "%");
+}
 }

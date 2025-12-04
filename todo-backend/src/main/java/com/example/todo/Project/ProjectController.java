@@ -45,15 +45,11 @@ public class ProjectController {
 
     @GetMapping("/{projectId}/todos")
     public List<TodoResponse> getTodosByProject(
-        @PathVariable Long projectId,
-        @RequestParam(required = false) Priority priority,
-        @RequestParam(required = false) Category category
+        @PathVariable Long projectId
+       
 ) {
-    TodoFilter filter = new TodoFilter();
-    filter.setPriority(priority);
-    filter.setCategory(category);
 
-    return service.getFilteredTodos(projectId, filter);
+    return service.getTodosByProject(projectId);
 }
 
     @GetMapping

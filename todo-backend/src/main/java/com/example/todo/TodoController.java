@@ -26,7 +26,7 @@ public class TodoController {
 
     @GetMapping
     public PageResponse<TodoResponse> getAll(
-             @RequestParam(required = false) Priority priority,
+         @RequestParam(required = false) Priority priority,
         @RequestParam(required = false) Category category,
         @RequestParam(required = false) String search,
         @RequestParam(required = false) String sortBy,
@@ -34,12 +34,12 @@ public class TodoController {
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size
     ) {
-        TodoFilter filter = new TodoFilter();
+        TodoFilter filter = new TodoFilter(); //adds each entity's unique filter in the specification
         filter.setCategory(category);
         filter.setPriority(priority);
         filter.setSearchTerm(search);
         Pageable pageable = PageRequest.of(page, size);
-        return service.getTodos(search, sortBy, direction, pageable);
+        return service.getFilteredTodos(filter, pageable);
     }
 
     @PostMapping
