@@ -1,4 +1,4 @@
-package com.example.todo.dto;
+package com.example.dto;
 
 import com.example.todo.Category;
 import com.example.todo.Priority;

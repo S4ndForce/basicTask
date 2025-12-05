@@ -1,6 +1,10 @@
-package com.example.todo.Project;
+package com.example.project;
 
 import java.util.List;
+
+import com.example.dto.CreateTodoRequest;
+import com.example.dto.TodoFilter;
+import com.example.dto.TodoResponse;
 import com.example.todo.Category;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -14,9 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.todo.Priority;
-import com.example.todo.dto.CreateTodoRequest;
-import com.example.todo.dto.TodoFilter;
-import com.example.todo.dto.TodoResponse;
 
 import jakarta.validation.Valid;
 

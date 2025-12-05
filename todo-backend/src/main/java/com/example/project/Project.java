@@ -1,4 +1,4 @@
-package com.example.todo.Project;
+package com.example.project;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import org.hibernate.annotations.CreationTimestamp;

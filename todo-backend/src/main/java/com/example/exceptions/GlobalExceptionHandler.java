@@ -1,4 +1,4 @@
-package com.example.todo.Exceptions;
+package com.example.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

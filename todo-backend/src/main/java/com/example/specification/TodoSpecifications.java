@@ -8,6 +8,8 @@ import com.example.todo.Priority;
 import com.example.todo.TodoItem;
    
 public class TodoSpecifications {
+
+    //Where the magic happens
     public static Specification<TodoItem> hasPriority(Priority priority){
         return(root, query, cb) ->
                                                                 //compares database priority to user input priority 

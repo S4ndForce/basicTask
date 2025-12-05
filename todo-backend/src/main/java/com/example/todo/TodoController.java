@@ -1,16 +1,18 @@
 package com.example.todo;
 
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.todo.dto.CreateTodoRequest;
-import com.example.todo.dto.PageResponse;
-import com.example.todo.dto.TodoFilter;
-import com.example.todo.dto.TodoResponse;
-import com.example.todo.dto.UpdateTodoRequest;
+import com.example.dto.CreateTodoRequest;
+import com.example.dto.PageResponse;
+import com.example.dto.TodoFilter;
+import com.example.dto.TodoResponse;
+import com.example.dto.UpdateTodoRequest;
 
+import org.springframework.data.domain.Sort;
 import jakarta.validation.Valid;
 
 @RestController
@@ -38,7 +40,18 @@ public class TodoController {
         filter.setCategory(category);
         filter.setPriority(priority);
         filter.setSearchTerm(search);
-        Pageable pageable = PageRequest.of(page, size);
+       String sortField = (sortBy == null || sortBy.isBlank())
+            ? "createdAt"   // default field to sort by
+            : sortBy;
+
+    Sort.Direction sortDirection =
+            direction.equalsIgnoreCase("desc")
+                    ? Sort.Direction.DESC
+                    : Sort.Direction.ASC;
+
+    Sort sort = Sort.by(sortDirection, sortField);
+      Pageable pageable = PageRequest.of(page, size, sort);
+
         return service.getFilteredTodos(filter, pageable);
     }
 

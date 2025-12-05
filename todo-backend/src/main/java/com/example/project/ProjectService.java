@@ -1,4 +1,4 @@
-package com.example.todo.Project;
+package com.example.project;
 
 import java.util.List;
 
@@ -10,12 +10,13 @@ import org.springframework.stereotype.Service;
 
 
 import static com.example.specification.TodoSpecifications.*;
+
+import com.example.dto.CreateTodoRequest;
+import com.example.dto.TodoFilter;
+import com.example.dto.TodoResponse;
+import com.example.exceptions.ProjectNotFound;
 import com.example.todo.TodoItem;
 import com.example.todo.TodoRepository;
-import com.example.todo.Exceptions.ProjectNotFound;
-import com.example.todo.dto.CreateTodoRequest;
-import com.example.todo.dto.TodoFilter;
-import com.example.todo.dto.TodoResponse;
 
 import jakarta.transaction.Transactional;
 

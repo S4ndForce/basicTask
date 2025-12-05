@@ -1,17 +1,6 @@
 package com.example.todo;
 
 import org.springframework.stereotype.Service;
-
-import com.example.todo.Exceptions.ProjectNotFound;
-import com.example.todo.Exceptions.TodoNotFound;
-import com.example.todo.Project.Project;
-import com.example.todo.Project.ProjectRepository;
-import com.example.todo.dto.CreateTodoRequest;
-import com.example.todo.dto.PageResponse;
-import com.example.todo.dto.TodoFilter;
-import com.example.todo.dto.TodoResponse;
-import com.example.todo.dto.UpdateTodoRequest;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +8,16 @@ import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.example.dto.CreateTodoRequest;
+import com.example.dto.PageResponse;
+import com.example.dto.TodoFilter;
+import com.example.dto.TodoResponse;
+import com.example.dto.UpdateTodoRequest;
+import com.example.exceptions.ProjectNotFound;
+import com.example.exceptions.TodoNotFound;
+import com.example.project.Project;
+import com.example.project.ProjectRepository;
 import com.example.specification.TodoSpecifications.*;
 import static com.example.specification.TodoSpecifications.*;
 @Service
@@ -105,6 +104,7 @@ public class TodoService {
         
     }
 
+    /* 
     public PageResponse<TodoResponse> getTodos(
             String search,
             String sortBy,
@@ -137,7 +137,9 @@ public class TodoService {
             page.getTotalElements(),
             page.getTotalPages()
         );
+
     }
+    */
 }
     
 
