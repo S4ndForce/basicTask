@@ -6,6 +6,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.example.project.Project;
+import com.example.todo.enums.Category;
+import com.example.todo.enums.Priority;
 
 @Entity
 public class TodoItem {

@@ -33,13 +33,26 @@ const [size, setSize] = useState(10);
 
 const [totalPages, setTotalPages] = useState(0);
 const [currentPage, setCurrentPage] = useState(0);
-const loadTodos = async () => {
-  
-   const res = await fetchTodos( searchTerm,
-    sort,        
+const [filters, setFilters] = useState({
+  priority: null,
+  category: null,
+  search: "",
+  sortBy: "createdAt",
+  direction: "asc",
+  page: 0,
+  size: 10
+})
+
+const loadTodos = async () => { 
+   const res = await fetchTodos( {
+    search: searchTerm,
+    sortBy: sort,        
     direction,
+    priority,
+    category,
     page,
-    size);
+    size,
+});
       const items = res.data.content || [];
    {
       setAllTodos(items);
@@ -90,24 +103,9 @@ const handleUpdate = async (id, updatedTodo) => {
 
   
 useEffect(() => {
-  if (searchTerm === "") {
-    loadTodos();  // when cleared, reload all
-  }
-  }, [searchTerm]);
-
+  loadTodos();
+}, [searchTerm, sort, direction, priority, category, page, size]);
   
-
-
-
-
-  useEffect(() => {
-    loadTodos(searchTerm, sort, direction, page, size);
-  }, [searchTerm, sort, direction, page, size]);
-
-  
-
-
-
 const filteredTodos = (allTodos || []).filter(todo => {
   if(filter === "ACTIVE") return !todo.completed;
   if(filter === "COMPLETED") return todo.completed;
@@ -171,8 +169,9 @@ const filteredTodos = (allTodos || []).filter(todo => {
         </div>
       </div>
       
-
-      {todos.some(t => t.completed) && (
+    
+ {/*if any todos are completed, then render the button*/}
+ {todos.some(t => t.completed) && ( 
         <div
           className = "fixed right-6 bottom-28 transition-all duration-500 ease-in-out transform translate-x-0 opacity-100"
         >
@@ -186,6 +185,8 @@ const filteredTodos = (allTodos || []).filter(todo => {
          </div>
         
       )}
+
+
 <div className="ml-8">
       <TodoSearch 
       searchTerm={searchTerm}
@@ -193,6 +194,7 @@ const filteredTodos = (allTodos || []).filter(todo => {
       loadTodos={loadTodos}
        />
 </div>
+
     </div>
     
   );

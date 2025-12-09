@@ -1,7 +1,7 @@
 package com.example.dto;
 
-import com.example.todo.Category;
-import com.example.todo.Priority;
+import com.example.todo.enums.Category;
+import com.example.todo.enums.Priority;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

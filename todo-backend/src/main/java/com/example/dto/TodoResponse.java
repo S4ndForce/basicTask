@@ -2,9 +2,9 @@ package com.example.dto;
 
 import java.time.LocalDateTime;
 
-import com.example.todo.Category;
-import com.example.todo.Priority;
 import com.example.todo.TodoItem;
+import com.example.todo.enums.Category;
+import com.example.todo.enums.Priority;
 
 public class TodoResponse {
 

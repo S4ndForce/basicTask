@@ -80,10 +80,10 @@ public class ProjectService {
 
 
     public List<TodoResponse> getTodosByProject(Long projectId){
-        Project p = projectRepo.findById(projectId)
+         projectRepo.findById(projectId)
         .orElseThrow(() -> new ProjectNotFound(projectId));
-
-        return todoRepo.findByProjectId(projectId)
+        Specification<TodoItem> spec = Specification.allOf(belongsToProject(projectId));
+        return todoRepo.findAll(spec) //find all todos in the repository that belong to a project
         .stream()
         .map(TodoResponse::fromEntity)
         .toList();

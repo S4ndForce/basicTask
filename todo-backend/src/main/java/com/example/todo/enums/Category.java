@@ -1,4 +1,4 @@
-package com.example.todo;
+package com.example.todo.enums;
 
 public enum Category {
     GENERAL, 

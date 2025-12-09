@@ -9,7 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface TodoRepository extends JpaRepository<TodoItem, Long> , JpaSpecificationExecutor<TodoItem> {
-
+    /* 
     @Query(
         "SELECT t FROM TodoItem t " +
         "ORDER BY CASE " +
@@ -20,7 +20,7 @@ public interface TodoRepository extends JpaRepository<TodoItem, Long> , JpaSpeci
     )
     List<TodoItem> findAllByOrderByPriorityCustom();
 
-    void deleteByCompletedTrue();
+    
 
     List<TodoItem> findByDescriptionContainingIgnoreCase(String search);
     List<TodoItem> findByDescriptionContainingIgnoreCase(String search, Sort sort);
@@ -45,5 +45,8 @@ public interface TodoRepository extends JpaRepository<TodoItem, Long> , JpaSpeci
     )
     Page<TodoItem> searchAndSortByPriority(String search, Pageable pageable);
     List<TodoItem> findByProjectId(Long projectId);
+
+    */
+    void deleteByCompletedTrue();
     void deleteByProjectId(Long projectId);
 }

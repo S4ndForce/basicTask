@@ -11,6 +11,8 @@ import com.example.dto.PageResponse;
 import com.example.dto.TodoFilter;
 import com.example.dto.TodoResponse;
 import com.example.dto.UpdateTodoRequest;
+import com.example.todo.enums.Category;
+import com.example.todo.enums.Priority;
 
 import org.springframework.data.domain.Sort;
 import jakarta.validation.Valid;
@@ -28,18 +30,24 @@ public class TodoController {
 
     @GetMapping
     public PageResponse<TodoResponse> getAll(
-         @RequestParam(required = false) Priority priority,
-        @RequestParam(required = false) Category category,
         @RequestParam(required = false) String search,
         @RequestParam(required = false) String sortBy,
         @RequestParam(required = false, defaultValue = "asc") String direction,
+        @RequestParam(required = false) String priority,
+        @RequestParam(required = false) String category,
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size
     ) {
         TodoFilter filter = new TodoFilter(); //adds each entity's unique filter in the specification
-        filter.setCategory(category);
-        filter.setPriority(priority);
+        if (category != null && !category.isBlank()) {
+    filter.setCategory(Category.valueOf(category.toUpperCase()));
+}
+        if (priority != null && !priority.isBlank()) {
+    filter.setPriority(Priority.valueOf(priority.toUpperCase()));
+}
         filter.setSearchTerm(search);
+
+        //check is sortBy is blank, if so sort by default 
        String sortField = (sortBy == null || sortBy.isBlank())
             ? "createdAt"   // default field to sort by
             : sortBy;
@@ -60,7 +68,7 @@ public class TodoController {
         return service.createTodo(req);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{id}") //take in id because it requires individual todos
     public TodoResponse update(@PathVariable Long id, @RequestBody @Valid CreateTodoRequest req) {
         return service.updateTodo(id, req);
     }
