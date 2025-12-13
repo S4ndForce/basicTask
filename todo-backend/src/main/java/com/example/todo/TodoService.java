@@ -20,6 +20,8 @@ import com.example.project.Project;
 import com.example.project.ProjectRepository;
 import com.example.specification.TodoSpecifications.*;
 import static com.example.specification.TodoSpecifications.*;
+
+// so basically all these methods compare changes in the frontend to the loaded entity
 @Service
 public class TodoService {
 
@@ -39,6 +41,11 @@ public class TodoService {
         t.setDescription(req.getDescription());
         t.setCategory(req.getCategory());
         t.setPriority(req.getPriority());
+
+        // Sorting mechanism
+        t.setPriorityOrder(req.getPriority().getOrder());
+
+
         t.setCompleted(req.isCompleted());
         // NEW: assign project if provided
         if (req.getProjectId() != null) {
@@ -54,9 +61,14 @@ public class TodoService {
         TodoItem t = repo.findById(id)
                 .orElseThrow(() -> new TodoNotFound(id));
 
-        t.setDescription(req.getDescription());
+        t.setDescription(req.getDescription()); 
         t.setCategory(req.getCategory());
         t.setPriority(req.getPriority());
+
+        // Sorting mechanism
+        t.setPriorityOrder(req.getPriority().getOrder());
+
+
         t.setCompleted(req.isCompleted());
 
         return TodoResponse.fromEntity(repo.save(t));
@@ -69,7 +81,11 @@ public class TodoService {
         if (req.getDescription() != null) t.setDescription(req.getDescription());
         if (req.getCompleted() != null) t.setCompleted(req.getCompleted());
         if (req.getCategory() != null) t.setCategory(req.getCategory());
-        if (req.getPriority() != null) t.setPriority(req.getPriority());
+        if (req.getPriority() != null){
+             t.setPriority(req.getPriority());
+             t.setPriorityOrder(req.getPriority().getOrder());
+        }
+        
         if (req.getProjectId() != null) {
     Project project = projectRepo.findById(req.getProjectId())
         .orElseThrow(() -> new ProjectNotFound(req.getProjectId()));

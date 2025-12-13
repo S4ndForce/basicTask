@@ -69,7 +69,7 @@ function TodoForm({priority, setPriority, category, handleAddTodo, setSortByPrio
             
           <button
             onClick={() => {
-              setSortByPriority("priority"); // makes it persistent by re-rendering the program instead of just useState which doesn't re render it and always has a default of false
+              setSortByPriority("priorityOrder"); // makes it persistent by re-rendering the program instead of just useState which doesn't re render it and always has a default of false
             
             }} // on click call the function and mark it true () => is an anonymous function.
             className="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition w-20 text-center"

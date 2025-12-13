@@ -46,6 +46,7 @@ public class TodoResponse {
     public LocalDateTime getUpdatedAt() { return updatedAt; }
 
     public static TodoResponse fromEntity(TodoItem item) {
+        // factory method, converts entity to response
         return new TodoResponse(
                 item.getId(),
                 item.getDescription(),

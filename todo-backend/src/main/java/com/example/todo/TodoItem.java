@@ -25,6 +25,17 @@ public class TodoItem {
     @Enumerated(EnumType.STRING)
     private Priority priority;   
 
+    @Column(name = "priority_order")
+    private Integer priorityOrder;
+    
+     public Integer getPriorityOrder() {
+        return priorityOrder;
+    }
+
+    public void setPriorityOrder(Integer priorityOrder) {
+        this.priorityOrder = priorityOrder;
+    }
+
     @CreationTimestamp
     private LocalDateTime createdAt;
 

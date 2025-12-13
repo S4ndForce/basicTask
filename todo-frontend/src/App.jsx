@@ -33,6 +33,8 @@ const [size, setSize] = useState(10);
 
 const [totalPages, setTotalPages] = useState(0);
 const [currentPage, setCurrentPage] = useState(0);
+
+
 const [filters, setFilters] = useState({
   priority: null,
   category: null,
@@ -44,15 +46,11 @@ const [filters, setFilters] = useState({
 })
 
 const loadTodos = async () => { 
-   const res = await fetchTodos( {
-    search: searchTerm,
-    sortBy: sort,        
-    direction,
-    priority,
-    category,
-    page,
-    size,
-});
+                 // TO the backend
+
+      const res = await fetchTodos(filters);
+
+                // FROM the backend
       const items = res.data.content || [];
    {
       setAllTodos(items);
@@ -61,8 +59,6 @@ const loadTodos = async () => {
       setCurrentPage(res.data.number);
   };
 };
-
-
 
 
 
@@ -76,8 +72,9 @@ const handleAddTodo = async () => {
   
 }
 
+// decides if todos are completed or not
 const handleToggle = async (id, completed) => {
-  const todo =todos.find(t => t.id === id);
+  const todo =todos.find(t => t.id === id); // find todos by id
   await toggleTodo(id,{... todo, completed});
   loadTodos();
     
@@ -106,7 +103,7 @@ useEffect(() => {
   loadTodos();
 }, [searchTerm, sort, direction, priority, category, page, size]);
   
-const filteredTodos = (allTodos || []).filter(todo => {
+const filteredTodos = (allTodos || []).filter(todo => { //fully frontend feature.
   if(filter === "ACTIVE") return !todo.completed;
   if(filter === "COMPLETED") return todo.completed;
   return true;

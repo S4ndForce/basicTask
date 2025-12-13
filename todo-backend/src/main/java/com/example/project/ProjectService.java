@@ -58,7 +58,7 @@ public class ProjectService {
     }
 
     public TodoResponse createTodoInProject(Long projectId, CreateTodoRequest req){
-        Project project = projectRepo.findById(projectId)
+        Project project = projectRepo.findById(projectId) // add exception handling?
         .orElseThrow(()-> new ProjectNotFound(projectId));
         //so how does it know which todoobject to actually get the descriptions from?
         //so this creates a new todo that we are setting?
@@ -93,7 +93,7 @@ public class ProjectService {
     @Transactional
     public void deleteById(Long projectId){
         todoRepo.deleteByProjectId(projectId);
-        projectRepo.deleteById(projectId); //deleteById is a built in method
+        projectRepo.deleteById(projectId); // deleteById is a built in method
         
     
 

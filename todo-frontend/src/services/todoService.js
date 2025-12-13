@@ -4,6 +4,7 @@ import axios from "axios";
 
 const API_URL = "http://localhost:8081/api/todos";
 
+// Fetch todos with filters, sorting, and pagination
 export const fetchTodos = (filters) => {
   const params = new URLSearchParams();
   if(filters.search) params.append("search", filters.search);
@@ -36,7 +37,7 @@ export const deleteTodo = (id) => {
 
 export const deleteCompleted = async (todos) => {
   const completed = todos.filter((t) => t.completed);
-  for (const todo of completed) {
+  for (const todo of completed) { //front end  decides what is completed, this just deletes by id
     await deleteTodo(todo.id);
   }
 };
