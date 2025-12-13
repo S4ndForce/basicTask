@@ -52,7 +52,7 @@ public class TodoController {
             ? "createdAt"   // default field to sort by
             : sortBy;
 
-    Sort.Direction sortDirection =
+        Sort.Direction sortDirection =
             direction.equalsIgnoreCase("desc")
                     ? Sort.Direction.DESC
                     : Sort.Direction.ASC;

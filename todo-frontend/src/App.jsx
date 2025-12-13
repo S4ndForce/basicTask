@@ -101,7 +101,7 @@ const handleUpdate = async (id, updatedTodo) => {
   
 useEffect(() => {
   loadTodos();
-}, [searchTerm, sort, direction, priority, category, page, size]);
+}, [searchTerm, sort, direction, priority, category, page, size, filters]);
   
 const filteredTodos = (allTodos || []).filter(todo => { //fully frontend feature.
   if(filter === "ACTIVE") return !todo.completed;
@@ -132,7 +132,7 @@ const filteredTodos = (allTodos || []).filter(todo => { //fully frontend feature
       setPriority={setPriority} 
       category={category} 
       handleAddTodo= {handleAddTodo} 
-      setSortByPriority ={setSort}
+      setFilters={setFilters}
       setNewTodo={setNewTodo}
       newTodo={newTodo}
       setCategory={setCategory}
@@ -186,8 +186,8 @@ const filteredTodos = (allTodos || []).filter(todo => { //fully frontend feature
 
 <div className="ml-8">
       <TodoSearch 
-      searchTerm={searchTerm}
-      setSearchTerm={setSearchTerm} 
+      filters={filters}
+      setFilters={setFilters} 
       loadTodos={loadTodos}
        />
 </div>
