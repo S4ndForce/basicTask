@@ -6,11 +6,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.example.dto.CreateTodoRequest;
 import com.example.dto.PageResponse;
+import com.example.dto.StatsResponse;
 import com.example.dto.TodoFilter;
 import com.example.dto.TodoResponse;
 import com.example.dto.UpdateTodoRequest;
@@ -20,6 +23,10 @@ import com.example.project.Project;
 import com.example.project.ProjectRepository;
 import com.example.specification.TodoSpecifications.*;
 import static com.example.specification.TodoSpecifications.*;
+
+import com.example.todo.enums.Priority;
+
+import com.example.todo.enums.Category;
 
 // so basically all these methods compare changes in the frontend to the loaded entity
 @Service
@@ -118,6 +125,48 @@ public class TodoService {
         );
 
         
+    }
+
+    public StatsResponse getTodoStats() {
+
+    long totalTodos = repo.count();
+    long completedCount = repo.countByCompletedTrue();
+    long activeCount = totalTodos - completedCount;
+
+    Map<Priority, Long> countByPriority = getCountByPriority();
+    Map<Category, Long> countByCategory = getCountByCategory();
+
+    StatsResponse stats = new StatsResponse();
+    stats.setTotalTodos((int) totalTodos);
+    stats.setCompletedCount((int) completedCount);
+    stats.setActiveCount((int) activeCount);
+    stats.setCountByPriority(countByPriority);
+    stats.setCountByCategory(countByCategory);
+
+    return stats;
+}
+    private Map<Priority, Long> getCountByPriority() {
+        Map<Priority, Long> result = new EnumMap<>(Priority.class);
+
+        for(Object[] row: repo.countByPriority()) {
+            Priority priority = (Priority) row[0];
+            Long count = (Long) row[1];
+            result.put(priority, count);
+        }
+
+        return result;
+    }
+
+    private Map<Category, Long> getCountByCategory() {
+        Map<Category, Long> result = new EnumMap<>(Category.class);
+
+        for(Object[] row: repo.countByCategory()) {
+            Category category = (Category) row[0];
+            Long count = (Long) row[1];
+            result.put(category, count);
+        }
+
+        return result;
     }
 
     /* 

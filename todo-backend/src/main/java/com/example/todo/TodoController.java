@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.example.dto.CreateTodoRequest;
 import com.example.dto.PageResponse;
+import com.example.dto.StatsResponse;
 import com.example.dto.TodoFilter;
 import com.example.dto.TodoResponse;
 import com.example.dto.UpdateTodoRequest;
@@ -81,6 +82,11 @@ public class TodoController {
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         service.deleteTodo(id);
+    }
+
+    @GetMapping("/stats")
+    public StatsResponse getStats() {
+        return service.getTodoStats();
     }
     
 }

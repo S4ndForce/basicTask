@@ -1,12 +1,16 @@
 package com.example.todo;
 
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import com.example.todo.enums.Category;
+import com.example.todo.enums.Priority;
 
 public interface TodoRepository extends JpaRepository<TodoItem, Long> , JpaSpecificationExecutor<TodoItem> {
     /* 
@@ -47,6 +51,24 @@ public interface TodoRepository extends JpaRepository<TodoItem, Long> , JpaSpeci
     List<TodoItem> findByProjectId(Long projectId);
 
     */
+    long countByCompletedTrue();
+    @Query("""
+            SELECT t.priority, COUNT(t)
+            FROM TodoItem t
+            GROUP BY t.priority
+            """)
+    List<Priority[]> countByPriority();
+
+    @Query("""
+            SELECT t.category, COUNT(t)
+            FROM TodoItem t
+            GROUP BY t.category
+            """
+            )
+    List<Category[]> countByCategory();
+
+
+    
     void deleteByCompletedTrue();
     void deleteByProjectId(Long projectId);
 }
