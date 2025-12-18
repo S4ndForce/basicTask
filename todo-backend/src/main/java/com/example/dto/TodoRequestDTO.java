@@ -21,7 +21,7 @@ public class TodoRequestDTO {
 
     private Boolean completed = false;
 
-    //getters
+    
     public String getDescription() { return description; }
     public Category getCategory() { return category; }
     public Priority getPriority() { return priority; }

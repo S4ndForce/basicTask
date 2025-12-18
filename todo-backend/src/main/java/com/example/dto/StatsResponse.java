@@ -5,13 +5,16 @@ import com.example.todo.enums.Category;
 import com.example.todo.enums.Priority;
 
 public class StatsResponse {
+    // Shape of JSON returned to frontend
     private Integer totalTodos;
     private Integer completedCount;
     private Integer activeCount;
     private Map<Priority, Long> countByPriority;
     private Map<Category, Long> countByCategory;
 
-    public Integer getTotalTodos() {
+
+
+public Integer getTotalTodos() {
     return totalTodos;
 }
 

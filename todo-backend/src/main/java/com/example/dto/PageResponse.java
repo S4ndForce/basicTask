@@ -3,7 +3,7 @@ package com.example.dto;
 import java.util.List;
 
 public class PageResponse<T> {
-
+    
     private List<T> content;
     private int page;
     private int size;
@@ -39,4 +39,9 @@ public class PageResponse<T> {
     public int getTotalPages() {
         return totalPages;
     }
+    /* 
+    public PageResponse<T> fromEntity(Page<T> page){
+        
+    }
+    */
 }

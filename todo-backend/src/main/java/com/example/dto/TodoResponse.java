@@ -36,7 +36,7 @@ public class TodoResponse {
         this.updatedAt = updatedAt;
         this.projectId = projectId;
     }
-
+    public Long getProjectId() { return projectId; } // is this necessary?
     public Long getId() { return id; }
     public String getDescription() { return description; }
     public boolean isCompleted() { return completed; }

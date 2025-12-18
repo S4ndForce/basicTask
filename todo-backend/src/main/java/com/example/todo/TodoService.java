@@ -2,14 +2,14 @@ package com.example.todo;
 
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.EnumMap;
-import java.util.List;
+
 import java.util.Map;
-import java.util.stream.Collectors;
+
 
 import com.example.dto.CreateTodoRequest;
 import com.example.dto.PageResponse;
@@ -21,7 +21,6 @@ import com.example.exceptions.ProjectNotFound;
 import com.example.exceptions.TodoNotFound;
 import com.example.project.Project;
 import com.example.project.ProjectRepository;
-import com.example.specification.TodoSpecifications.*;
 import static com.example.specification.TodoSpecifications.*;
 
 import com.example.todo.enums.Priority;
@@ -127,7 +126,7 @@ public class TodoService {
         
     }
 
-    public StatsResponse getTodoStats() {
+public StatsResponse getTodoStats() {
 
     long totalTodos = repo.count();
     long completedCount = repo.countByCompletedTrue();
@@ -145,6 +144,8 @@ public class TodoService {
 
     return stats;
 }
+
+    // Helper methods that ensure rows get converted into maps
     private Map<Priority, Long> getCountByPriority() {
         Map<Priority, Long> result = new EnumMap<>(Priority.class);
 
