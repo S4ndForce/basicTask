@@ -2,10 +2,13 @@
 
 import axios from "axios";
 
-const API_URL = "http://localhost:8081/api/todos";
+const API_URL = "http://localhost:8081/api";
 
-// Fetch todos with filters, sorting, and pagination
-export const fetchTodos = (filters) => {
+// Fetch todos with filters, sorting, and pagination and project id
+export const fetchTodos = (filters, selectedProjectId) => {
+  const baseUrl = selectedProjectId
+    ? `/projects/${selectedProjectId}/todos`
+    : `/todos`
   const params = new URLSearchParams();
   if(filters.search) params.append("search", filters.search);
   if(filters.priority) params.append("priority", filters.priority);
@@ -16,23 +19,23 @@ export const fetchTodos = (filters) => {
   params.append("page", filters.page ?? 0);
   params.append("size", filters.size ?? 10);
 
-  return axios.get(`${API_URL}?${params.toString()}`);
+  return axios.get(`${API_URL}${baseUrl}?${params.toString()}`);
 };
 
 export const addTodo = (todo) => {
-  return axios.post(API_URL, todo);
+  return axios.post(`${API_URL}/todos`, todo);
 };
 
 export const updateTodo = (id, changes) => {
-  return axios.patch(`${API_URL}/${id}`, changes);
+  return axios.patch(`${API_URL}/todos/${id}`, changes);
 };
 
 export const toggleTodo = (id, todo) => {
-  return axios.put(`${API_URL}/${id}`, todo);
+  return axios.put(`${API_URL}/todos/${id}`, todo);
 };
 
 export const deleteTodo = (id) => {
-  return axios.delete(`${API_URL}/${id}`);
+  return axios.delete(`${API_URL}/todos/${id}`);
 };
 
 export const deleteCompleted = async (todos) => {
@@ -40,4 +43,8 @@ export const deleteCompleted = async (todos) => {
   for (const todo of completed) { //front end  decides what is completed, this just deletes by id
     await deleteTodo(todo.id);
   }
+};
+
+export const fetchProjects = () => {
+  return axios.get(`${API_URL}/projects`);
 };

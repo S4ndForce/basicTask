@@ -4,28 +4,30 @@ import {
   updateTodo,
   deleteTodo,
   deleteCompleted,
-  toggleTodo
+  toggleTodo,
+  fetchProjects
 } from "./services/todoService";
 import TodoFilter from "./components/TodoFilter";
 import TodoList from "./components/TodoList";
 import TodoSearch from "./components/TodoSearch";
 import React, { useState, useEffect } from "react";
 import TodoForm from "./components/TodoForm";
+import Projects from "./components/Projects";
 
 
 
 function App() {
 
-  //default variables
+// Filters
 const [priority, setPriority] = useState("LOW");
 const [category, setCategory] = useState("GENERAL");
+
 const [sort, setSort] = useState("createdAt");
 const [searchTerm, setSearchTerm] = useState(""); //when I type a specific todo by name, it stores it in useState and then it sends it
 const[filter, setFilter]=useState("ALL");
 const [todos, setTodos] = useState([]);
 const [newTodo, setNewTodo] = useState("");
 const [allTodos, setAllTodos] = useState([]);
-
 const [direction, setDirection] = useState("asc");
 
 const [page, setPage] = useState(0);
@@ -33,6 +35,8 @@ const [size, setSize] = useState(10);
 
 const [totalPages, setTotalPages] = useState(0);
 const [currentPage, setCurrentPage] = useState(0);
+const [projects, setProjects] = useState([])
+const [selectedProjectId, setSelectedProjectId] = useState(null)
 
 
 const [filters, setFilters] = useState({
@@ -48,7 +52,7 @@ const [filters, setFilters] = useState({
 const loadTodos = async () => { 
                  // TO the backend
 
-      const res = await fetchTodos(filters);
+      const res = await fetchTodos(filters, selectedProjectId);
 
                 // FROM the backend
       const items = res.data.content || [];
@@ -98,10 +102,30 @@ const handleUpdate = async (id, updatedTodo) => {
    // only if you use this
 };
 
+const handleSelectProject = (projectId) => {
+  setSelectedProjectId(projectId)
+};
+
   
 useEffect(() => {
   loadTodos();
-}, [searchTerm, sort, direction, priority, category, page, size, filters]);
+}, [filters]);
+
+useEffect(() => {
+  setFilters(prev => ({ ...prev, page: 0 }))
+}, [selectedProjectId])
+
+useEffect(() => {
+  fetchProjects()
+    .then(res => {
+      console.log("projects fetched:", res.data);
+      setProjects(res.data);
+    })
+    .catch(err => {
+      console.error("failed to fetch projects", err);
+    });
+}, []);
+
   
 const filteredTodos = (allTodos || []).filter(todo => { //fully frontend feature.
   if(filter === "ACTIVE") return !todo.completed;
@@ -120,12 +144,19 @@ const filteredTodos = (allTodos || []).filter(todo => { //fully frontend feature
        p-6 w-[80%] max-w-3xl h-[650px] overflow-hidden relative flex flex-col">
 
        <div className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm pb-4 w-full ">
-
+        <Projects
+       projects = {projects}
+       setProjects = {setProjects}
+       selectedProjectId = {selectedProjectId}
+      setSelectedProjectId = {setSelectedProjectId}
+      />
        <h1 className="text-3xl font-bold text-center  text-gray-800 mb-4">
 
           My To-do List
 
       </h1>
+       
+
   
       <TodoForm 
       priority={priority} 
@@ -137,6 +168,8 @@ const filteredTodos = (allTodos || []).filter(todo => { //fully frontend feature
       newTodo={newTodo}
       setCategory={setCategory}
      />
+
+     
         <div className="flex justify-end w-full">
       <p className="text-sm text-gray-500">
         {filteredTodos.filter(t => !t.completed).length} tasks remaining
@@ -190,6 +223,8 @@ const filteredTodos = (allTodos || []).filter(todo => { //fully frontend feature
       setFilters={setFilters} 
       loadTodos={loadTodos}
        />
+
+      
 </div>
 
     </div>
