@@ -2,24 +2,21 @@ package com.example.project;
 
 import java.time.LocalDateTime;
 
-public class ProjectResponse{
+public class ProjectResponse {
+
     private Long id;
     private String name;
     private String description;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
 
+    public Long getId() { return id; }
+    public String getName() { return name; }
+    public String getDescription() { return description; }
 
-    //wraps the Project entity to a response dto
-    public static ProjectResponse fromEntity(Project p){
-        var response = new ProjectResponse();
-        response.id = p.getId();
-        response.name = p.getName();
-        response.description = p.getDescription();
-        response.createdAt = p.getCreatedAt();
-        response.updatedAt = p.getUpdatedAt();
-        
-        return response;
-
+    public static ProjectResponse fromEntity(Project p) {
+        ProjectResponse r = new ProjectResponse();
+        r.id = p.getId();
+        r.name = p.getName();
+        r.description = p.getDescription();
+        return r;
     }
 }

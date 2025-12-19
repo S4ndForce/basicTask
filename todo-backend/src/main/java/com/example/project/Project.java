@@ -5,7 +5,9 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.example.todo.TodoItem;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.util.ArrayList;
 import java.util.List;
 @Entity
 public class Project {
@@ -14,11 +16,11 @@ public class Project {
     private Long id;
 
     private String name;
-
     private String description;
 
     @OneToMany(mappedBy = "project")
-    private List<TodoItem> todos;
+    @JsonIgnore
+    private List<TodoItem> todos = new ArrayList<>();
 
     @CreationTimestamp
     private LocalDateTime createdAt;

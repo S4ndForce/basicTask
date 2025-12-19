@@ -5,7 +5,8 @@ import {
   deleteTodo,
   deleteCompleted,
   toggleTodo,
-  fetchProjects
+  fetchProjects,
+  createProject
 } from "./services/todoService";
 import TodoFilter from "./components/TodoFilter";
 import TodoList from "./components/TodoList";
@@ -13,6 +14,8 @@ import TodoSearch from "./components/TodoSearch";
 import React, { useState, useEffect } from "react";
 import TodoForm from "./components/TodoForm";
 import Projects from "./components/Projects";
+import ProjectAdd from "./components/ProjectAdd";
+
 
 
 
@@ -35,8 +38,10 @@ const [size, setSize] = useState(10);
 
 const [totalPages, setTotalPages] = useState(0);
 const [currentPage, setCurrentPage] = useState(0);
-const [projects, setProjects] = useState([])
-const [selectedProjectId, setSelectedProjectId] = useState(null)
+const [projects, setProjects] = useState([]);
+const [selectedProjectId, setSelectedProjectId] = useState(null);
+const [newProjectName, setNewProjectName] = useState("");
+
 
 
 const [filters, setFilters] = useState({
@@ -106,6 +111,14 @@ const handleSelectProject = (projectId) => {
   setSelectedProjectId(projectId)
 };
 
+const handleCreateProject = async () => {
+  if (!newProjectName.trim()) return;
+
+  await createProject({ name: newProjectName });
+  setNewProjectName("");
+  fetchProjects(); // refresh list
+};
+
   
 useEffect(() => {
   loadTodos();
@@ -133,6 +146,8 @@ const filteredTodos = (allTodos || []).filter(todo => { //fully frontend feature
   return true;
 });
 
+
+
   
 
   return (
@@ -144,12 +159,22 @@ const filteredTodos = (allTodos || []).filter(todo => { //fully frontend feature
        p-6 w-[80%] max-w-3xl h-[650px] overflow-hidden relative flex flex-col">
 
        <div className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm pb-4 w-full ">
-        <Projects
+       <div className="flex items-center justify-between mb-4">
+      <Projects
        projects = {projects}
        setProjects = {setProjects}
        selectedProjectId = {selectedProjectId}
       setSelectedProjectId = {setSelectedProjectId}
       />
+
+      <ProjectAdd 
+        newProjectName={newProjectName}
+        setNewProjectName={setNewProjectName}
+        handleCreateProject={handleCreateProject}
+      />
+      </div>
+        
+      
        <h1 className="text-3xl font-bold text-center  text-gray-800 mb-4">
 
           My To-do List
@@ -224,10 +249,14 @@ const filteredTodos = (allTodos || []).filter(todo => { //fully frontend feature
       loadTodos={loadTodos}
        />
 
+       
+
       
 </div>
+  
+      
 
-    </div>
+  </div>
     
   );
 }

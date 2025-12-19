@@ -48,3 +48,8 @@ export const deleteCompleted = async (todos) => {
 export const fetchProjects = () => {
   return axios.get(`${API_URL}/projects`);
 };
+
+export const createProject = (project) => {
+  return axios.post(`${API_URL}/projects`, project);
+};
+
