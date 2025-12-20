@@ -8,6 +8,7 @@ import {
   fetchProjects,
   createProject
 } from "./services/todoService";
+
 import TodoFilter from "./components/TodoFilter";
 import TodoList from "./components/TodoList";
 import TodoSearch from "./components/TodoSearch";
@@ -15,9 +16,7 @@ import React, { useState, useEffect } from "react";
 import TodoForm from "./components/TodoForm";
 import Projects from "./components/Projects";
 import ProjectAdd from "./components/ProjectAdd";
-
-
-
+import Pages from "./components/Pages"
 
 function App() {
 
@@ -36,8 +35,8 @@ const [direction, setDirection] = useState("asc");
 const [page, setPage] = useState(0);
 const [size, setSize] = useState(10);
 
-const [totalPages, setTotalPages] = useState(0);
-const [currentPage, setCurrentPage] = useState(0);
+const [totalPages, setTotalPages] = useState(1);
+const [currentPage, setCurrentPage] = useState(1);
 const [projects, setProjects] = useState([]);
 const [selectedProjectId, setSelectedProjectId] = useState(null);
 const [newProjectName, setNewProjectName] = useState("");
@@ -66,6 +65,7 @@ const loadTodos = async () => {
       setTodos(items);
       setTotalPages(res.data.totalPages);
       setCurrentPage(res.data.number);
+      
   };
 };
 
@@ -119,10 +119,32 @@ const handleCreateProject = async () => {
   fetchProjects(); // refresh list
 };
 
-  
+// Page Handlers
+const goPrev = () => {
+  setFilters(prev => ({
+    ...prev,
+    page: Math.max(prev.page - 1, 0)
+  }));
+};
+
+const goNext = () => {
+  setFilters(prev => ({
+    ...prev,
+    page: Math.min(prev.page + 1, totalPages - 1)
+  }));
+};
+
+// Buttons determine bounds
+
+
 useEffect(() => {
   loadTodos();
-}, [filters]);
+}, []);
+
+
+useEffect(() => {
+  loadTodos();
+}, [filters, setSelectedProjectId]);
 
 useEffect(() => {
   setFilters(prev => ({ ...prev, page: 0 }))
@@ -192,7 +214,7 @@ const filteredTodos = (allTodos || []).filter(todo => { //fully frontend feature
       setNewTodo={setNewTodo}
       newTodo={newTodo}
       setCategory={setCategory}
-     />
+      />
 
      
         <div className="flex justify-end w-full">
@@ -222,6 +244,12 @@ const filteredTodos = (allTodos || []).filter(todo => { //fully frontend feature
         />
         
         </div>
+        <Pages
+          goNext={goNext}
+          goPrev={goPrev}
+          currentPage={currentPage}
+          totalPages={totalPages}
+        />
       </div>
       
     

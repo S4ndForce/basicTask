@@ -1,6 +1,8 @@
-package com.example.project;
+package com.example.dto;
 
 import java.time.LocalDateTime;
+
+import com.example.project.Project;
 
 public class ProjectResponse {
 
