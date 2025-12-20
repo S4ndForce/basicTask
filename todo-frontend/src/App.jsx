@@ -24,19 +24,17 @@ function App() {
 const [priority, setPriority] = useState("LOW");
 const [category, setCategory] = useState("GENERAL");
 
-const [sort, setSort] = useState("createdAt");
-const [searchTerm, setSearchTerm] = useState(""); //when I type a specific todo by name, it stores it in useState and then it sends it
+ //when I type a specific todo by name, it stores it in useState and then it sends it
 const[filter, setFilter]=useState("ALL");
 const [todos, setTodos] = useState([]);
 const [newTodo, setNewTodo] = useState("");
 const [allTodos, setAllTodos] = useState([]);
-const [direction, setDirection] = useState("asc");
 
-const [page, setPage] = useState(0);
-const [size, setSize] = useState(10);
 
-const [totalPages, setTotalPages] = useState(1);
-const [currentPage, setCurrentPage] = useState(1);
+
+
+
+const [totalPages, setTotalPages] = useState(0);
 const [projects, setProjects] = useState([]);
 const [selectedProjectId, setSelectedProjectId] = useState(null);
 const [newProjectName, setNewProjectName] = useState("");
@@ -44,29 +42,38 @@ const [newProjectName, setNewProjectName] = useState("");
 
 
 const [filters, setFilters] = useState({
-  priority: null,
-  category: null,
-  search: "",
+  page: 0,
+  size: 10,
   sortBy: "createdAt",
   direction: "asc",
-  page: 0,
-  size: 10
-})
+  search: "",
+  priority: null,
+  category: null
+});
 
-const loadTodos = async () => { 
-                 // TO the backend
 
-      const res = await fetchTodos(filters, selectedProjectId);
+const loadTodos = async () => {
+  const res = await fetchTodos(filters, selectedProjectId);
 
-                // FROM the backend
-      const items = res.data.content || [];
-   {
-      setAllTodos(items);
-      setTodos(items);
-      setTotalPages(res.data.totalPages);
-      setCurrentPage(res.data.number);
-      
-  };
+  const items = res.data.content ?? [];
+
+  setAllTodos(items);
+  setTodos(items);
+  setTotalPages(res.data.totalPages ?? 1);
+
+  // sync page if backend corrected it
+  if (filters.page !== res.data.page) {
+    setFilters(prev => ({
+      ...prev,
+      page: res.data.page
+    }));
+  }
+
+  console.log({
+  filtersPage: filters.page,
+  backendPage: res.data.number,
+  totalPages: res.data.totalPages
+});
 };
 
 
@@ -128,23 +135,22 @@ const goPrev = () => {
 };
 
 const goNext = () => {
-  setFilters(prev => ({
-    ...prev,
-    page: Math.min(prev.page + 1, totalPages - 1)
-  }));
+  setFilters(prev => {
+    if (prev.page >= totalPages - 1) return prev;
+    return {
+      ...prev,
+      page: prev.page + 1
+    };
+  });
 };
-
 // Buttons determine bounds
 
 
-useEffect(() => {
-  loadTodos();
-}, []);
 
 
 useEffect(() => {
   loadTodos();
-}, [filters, setSelectedProjectId]);
+}, [filters, selectedProjectId]);
 
 useEffect(() => {
   setFilters(prev => ({ ...prev, page: 0 }))
@@ -242,15 +248,18 @@ const filteredTodos = (allTodos || []).filter(todo => { //fully frontend feature
             onUpdate={handleUpdate}
             
         />
-        
+       
         </div>
+       
         <Pages
           goNext={goNext}
           goPrev={goPrev}
-          currentPage={currentPage}
+          page={filters.page}
           totalPages={totalPages}
         />
+        
       </div>
+    
       
     
  {/*if any todos are completed, then render the button*/}
