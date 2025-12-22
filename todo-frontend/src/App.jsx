@@ -6,7 +6,7 @@ import {
   deleteCompleted,
   toggleTodo,
   fetchProjects,
-  createProject
+  createProject,
 } from "./services/todoService";
 
 import TodoFilter from "./components/TodoFilter";
@@ -17,6 +17,7 @@ import TodoForm from "./components/TodoForm";
 import Projects from "./components/Projects";
 import ProjectAdd from "./components/ProjectAdd";
 import Pages from "./components/Pages"
+import Stats from "./components/Stats"
 
 function App() {
 
@@ -35,10 +36,12 @@ const [allTodos, setAllTodos] = useState([]);
 
 
 const [totalPages, setTotalPages] = useState(0);
+
 const [projects, setProjects] = useState([]);
 const [selectedProjectId, setSelectedProjectId] = useState(null);
 const [newProjectName, setNewProjectName] = useState("");
 
+const [statsRefreshKey, setStatsRefreshKey] = useState(0);
 
 
 const [filters, setFilters] = useState({
@@ -85,6 +88,7 @@ const handleAddTodo = async () => {
   });
   setNewTodo("");
   loadTodos();
+  setStatsRefreshKey(prev => prev + 1);
   
 }
 
@@ -93,7 +97,7 @@ const handleToggle = async (id, completed) => {
   const todo =todos.find(t => t.id === id); // find todos by id
   await toggleTodo(id,{... todo, completed});
   loadTodos();
-    
+  setStatsRefreshKey(prev => prev + 1);
 }
 
 const handleDelete = async (id) => {
@@ -111,6 +115,7 @@ const handleDeleteCompleted = async () =>{
 const handleUpdate = async (id, updatedTodo) => {
   await updateTodo(id, updatedTodo);
   loadTodos();
+  setStatsRefreshKey(prev => prev + 1);
    // only if you use this
 };
 
@@ -288,8 +293,11 @@ const filteredTodos = (allTodos || []).filter(todo => { //fully frontend feature
       loadTodos={loadTodos}
        />
 
-       
-
+       <Stats
+  selectedProjectId={selectedProjectId}
+  refreshKey={statsRefreshKey}
+/>
+      
       
 </div>
   

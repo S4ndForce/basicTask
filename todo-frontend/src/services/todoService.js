@@ -23,6 +23,15 @@ export const fetchTodos = (filters, selectedProjectId) => {
   return axios.get(`${API_URL}${baseUrl}?${params.toString()}`);
 };
 
+export const fetchStats = (selectedProjectId) => {
+  const baseUrl = selectedProjectId
+    ? `/projects/${selectedProjectId}/stats`
+    : `/todos/stats`;
+
+  return axios.get(`${API_URL}${baseUrl}`);
+};
+
+
 export const addTodo = (todo) => {
   return axios.post(`${API_URL}/todos`, todo);
 };
