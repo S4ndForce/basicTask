@@ -17,7 +17,7 @@ public interface TodoRepository extends JpaRepository<TodoItem, Long> , JpaSpeci
             FROM TodoItem t
             GROUP BY t.priority
             """)
-    List<Priority[]> countByPriority();
+    List<Object[]> countByPriority();
 
     @Query("""
             SELECT t.category, COUNT(t)
@@ -25,7 +25,7 @@ public interface TodoRepository extends JpaRepository<TodoItem, Long> , JpaSpeci
             GROUP BY t.category
             """
             )
-    List<Category[]> countByCategory();
+    List<Object[]> countByCategory();
  
 
     // Delete methods
