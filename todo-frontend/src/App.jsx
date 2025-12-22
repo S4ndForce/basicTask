@@ -255,7 +255,9 @@ const filteredTodos = (allTodos || []).filter(todo => { //fully frontend feature
           goNext={goNext}
           goPrev={goPrev}
           page={filters.page}
+          size ={filters.size}
           totalPages={totalPages}
+          setFilters={setFilters}
         />
         
       </div>

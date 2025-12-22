@@ -1,4 +1,4 @@
-function Pages({ page, totalPages, goPrev, goNext }) {
+function Pages({ page, size, totalPages, goPrev, goNext, setFilters }) {
   return (
     <div className="flex items-center justify-between mt-4 gap-4">
       <button
@@ -20,6 +20,23 @@ function Pages({ page, totalPages, goPrev, goNext }) {
       >
         Next
       </button>
+
+       <select
+        value={size}
+        onChange={(e) =>
+          setFilters(prev => ({
+            ...prev,
+            size: Number(e.target.value),
+            page: 0
+          }))
+        }
+        className="border px-2 py-1 rounded"
+      >
+        <option value={5}>5</option>
+        <option value={10}>10</option>
+        <option value={20}>20</option>
+      </select>
+
     </div>
   );
 }
