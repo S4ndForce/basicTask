@@ -32,8 +32,11 @@ export const fetchStats = (selectedProjectId) => {
 };
 
 
-export const addTodo = (todo) => {
-  return axios.post(`${API_URL}/todos`, todo);
+export const addTodo = (todo, selectedProjectId) => {
+  const baseUrl = selectedProjectId
+  ? `/projects/${selectedProjectId}/todos`
+    : `/todos`;
+  return axios.post(`${API_URL}${baseUrl}`, todo);
 };
 
 export const updateTodo = (id, changes) => {

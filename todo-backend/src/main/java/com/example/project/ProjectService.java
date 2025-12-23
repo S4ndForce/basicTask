@@ -2,6 +2,7 @@ package com.example.project;
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
@@ -13,6 +14,7 @@ import static com.example.specification.TodoSpecifications.*;
 
 import com.example.dto.CreateProjectRequest;
 import com.example.dto.CreateTodoRequest;
+import com.example.dto.PageResponse;
 import com.example.dto.ProjectResponse;
 import com.example.dto.TodoFilter;
 import com.example.dto.TodoResponse;
@@ -74,6 +76,9 @@ public class ProjectService {
         //links it to the current project
         todo.setProject(project);
 
+        // Sorting
+        todo.setPriorityOrder(req.getPriority().getOrder());
+
         TodoItem saved = todoRepo.save(todo);
         return TodoResponse.fromEntity(saved); //returns a response dto from the previous "saved"
 
@@ -81,15 +86,33 @@ public class ProjectService {
     }
 
 
-    public List<TodoResponse> getTodosByProject(Long projectId){
-         projectRepo.findById(projectId)
+    public PageResponse<TodoResponse> getTodosByProject(
+        Long projectId,
+        TodoFilter filter,
+        Pageable pageable
+) {
+    projectRepo.findById(projectId)
         .orElseThrow(() -> new ProjectNotFound(projectId));
-        Specification<TodoItem> spec = Specification.allOf(belongsToProject(projectId));
-        return todoRepo.findAll(spec) //find all todos in the repository that belong to a project
-        .stream()
-        .map(TodoResponse::fromEntity)
-        .toList();
-    }
+
+    Specification<TodoItem> spec = Specification
+        .allOf(belongsToProject(projectId))
+        .and(hasPriority(filter.getPriority()))
+        .and(hasCategory(filter.getCategory()))
+        .and(hasSearch(filter.getSearchTerm()));
+
+    Page<TodoItem> page = todoRepo.findAll(spec, pageable);
+
+    var content = page.map(TodoResponse::fromEntity).toList();
+
+    return new PageResponse<>(
+        content,
+        page.getNumber(),
+        page.getSize(),
+        page.getTotalElements(),
+        page.getTotalPages()
+    );
+}
+
 
 
     @Transactional

@@ -74,7 +74,7 @@ const loadTodos = async () => {
 
   console.log({
   filtersPage: filters.page,
-  backendPage: res.data.number,
+  backendPage: res.data.page,
   totalPages: res.data.totalPages
 });
 };
@@ -85,7 +85,7 @@ const handleAddTodo = async () => {
   if(!newTodo.trim()) return;
   await addTodo({
     description: newTodo, completed: false, category, priority
-  });
+  }, selectedProjectId);
   setNewTodo("");
   loadTodos();
   setStatsRefreshKey(prev => prev + 1);
@@ -103,12 +103,14 @@ const handleToggle = async (id, completed) => {
 const handleDelete = async (id) => {
     await deleteTodo(id);
     loadTodos();
+    setStatsRefreshKey(prev => prev + 1);
      
 };
 
 const handleDeleteCompleted = async () =>{
     await deleteCompleted(todos);
     loadTodos();
+    setStatsRefreshKey(prev => prev + 1);
       
 };
 
@@ -116,6 +118,7 @@ const handleUpdate = async (id, updatedTodo) => {
   await updateTodo(id, updatedTodo);
   loadTodos();
   setStatsRefreshKey(prev => prev + 1);
+  
    // only if you use this
 };
 
