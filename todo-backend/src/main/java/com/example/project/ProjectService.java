@@ -117,6 +117,9 @@ public class ProjectService {
 
     @Transactional
     public void deleteById(Long projectId){
+         if (!projectRepo.existsById(projectId)) {
+        return;
+    }
         todoRepo.deleteByProjectId(projectId);
         projectRepo.deleteById(projectId); // deleteById is a built in method
         

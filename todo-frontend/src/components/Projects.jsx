@@ -1,48 +1,47 @@
-
-
-function Projects({ projects, selectedProjectId, setSelectedProjectId }) {
-     console.log("Projects component rendered", projects);
+function Projects({ projects, selectedProjectId, setSelectedProjectId, handleDeleteProject }) {
   return (
-    
-    <div className="flex gap-2 mb-4">
-      {projects.map(project => (
-        <button
-          key={project.id}
-          onClick={() => setSelectedProjectId(project.id)}
-          className={
-            project.id === selectedProjectId
-              ? "font-bold underline"
-              : ""
-          }
-        >
-          {project.name}
-        </button>
-      ))}
+    <>
+      {projects.map(project => {
+        const isActive = project.id === selectedProjectId;
+
+        return (
+          <div
+  key={project.id}
+  onClick={() =>
+    setSelectedProjectId(isActive ? null : project.id)
+  }
+  className={`group flex items-center justify-between px-3 py-2 rounded cursor-pointer
+    ${isActive
+      ? "bg-blue-100 text-blue-700 font-medium"
+      : "hover:bg-gray-100 text-gray-700"}
+  `}
+>
+  <span className="truncate text-sm">
+    {project.name}
+  </span>
+
+  <button
+    onClick={(e) => {
+       e.stopPropagation();
+    handleDeleteProject(project.id);
+    }}
+    className="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-red-500 text-xs"
+    title="Delete project"
+  >
+    x
+  </button>
+</div>
+
+        );
+      })}
+
       {projects.length === 0 && (
-        <p className="text-sm text-gray-500">No projects yet</p>
-    )}
-    </div>
+        <p className="text-sm text-gray-400 mt-2">
+          No projects yet
+        </p>
+      )}
+    </>
   );
 }
-export default Projects;
 
-/*
-function Projects({ projects }) {
-  return (
-    <div
-      style={{
-        backgroundColor: "red",
-        color: "white",
-        padding: "16px",
-        position: "fixed",
-        top: "20px",
-        left: "20px",
-        zIndex: 9999
-      }}
-    >
-      PROJECTS TEST — {projects.length}
-    </div>
-  );
-}
 export default Projects;
-*/

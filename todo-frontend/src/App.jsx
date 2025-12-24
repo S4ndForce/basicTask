@@ -7,6 +7,7 @@ import {
   toggleTodo,
   fetchProjects,
   createProject,
+  deleteProject
 } from "./services/todoService";
 
 import TodoFilter from "./components/TodoFilter";
@@ -54,6 +55,10 @@ const [filters, setFilters] = useState({
   category: null
 });
 
+const loadProjects = async () => {
+  const res = await fetchProjects();
+  setProjects(res.data);
+};
 
 const loadTodos = async () => {
   const res = await fetchTodos(filters, selectedProjectId);
@@ -126,12 +131,35 @@ const handleSelectProject = (projectId) => {
   setSelectedProjectId(projectId)
 };
 
+const handleDeleteProject = async (projectId) => {
+  const confirmed = window.confirm("Delete this project?");
+  if (!confirmed) return;
+
+  setSelectedProjectId(null);
+
+  await deleteProject(projectId);
+
+  setProjects(prev =>
+    prev.filter(p => p.id !== projectId)
+  );
+
+  if (selectedProjectId === projectId) {
+    setSelectedProjectId(null);
+  }
+setStatsRefreshKey(prev => prev + 1);
+  
+  loadProjects();
+  
+};
+
 const handleCreateProject = async () => {
   if (!newProjectName.trim()) return;
 
   await createProject({ name: newProjectName });
   setNewProjectName("");
-  fetchProjects(); // refresh list
+  loadTodos();
+  loadProjects();
+   // refresh list
 };
 
 // Page Handlers
@@ -187,128 +215,116 @@ const filteredTodos = (allTodos || []).filter(todo => { //fully frontend feature
   
 
   return (
+  <div className="bg-gray-100 min-h-screen flex gap-6 p-6 items-stretch">
     
-    
-    <div className=" bg-gray-100 flex  justify-start pt-8 pl-5 items-start min-h-screen p-6 pr-8 relative ">  {/*Parent container that determines size of everything else */}
-    {/*flex puts everything in one line, items center alligns children, space x-2 uniform space between children */}
-      <div className="bg-white/95 rounded-2xl shadow-2xl border border-gray-200 
-       p-6 w-[80%] max-w-3xl h-[650px] overflow-hidden relative flex flex-col">
 
-       <div className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm pb-4 w-full ">
-       <div className="flex items-center justify-between mb-4">
-      <Projects
-       projects = {projects}
-       setProjects = {setProjects}
-       selectedProjectId = {selectedProjectId}
-      setSelectedProjectId = {setSelectedProjectId}
-      />
+    {/* LEFT: PROJECT SIDEBAR */}
+    <aside className="w-60 bg-white rounded-2xl shadow-xl border border-gray-200 
+  p-4 flex flex-col h-[650px]">
+      <h2 className="text-sm font-semibold text-gray-600 mb-3">
+        Projects
+      </h2>
 
-      <ProjectAdd 
-        newProjectName={newProjectName}
-        setNewProjectName={setNewProjectName}
-        handleCreateProject={handleCreateProject}
-      />
+      <div className="flex-1 overflow-y-auto space-y-1">
+        <Projects
+          projects={projects}
+          selectedProjectId={selectedProjectId}
+          setSelectedProjectId={setSelectedProjectId}
+          handleDeleteProject={handleDeleteProject}
+        />
       </div>
-        
-      
-       <h1 className="text-3xl font-bold text-center  text-gray-800 mb-4">
 
+      <div className="mt-4">
+        <ProjectAdd
+          newProjectName={newProjectName}
+          setNewProjectName={setNewProjectName}
+          handleCreateProject={handleCreateProject}
+        />
+      </div>
+      
+    </aside>
+
+    {/* CENTER: TODO APP CARD */}
+    <div className="bg-white/95 rounded-2xl shadow-2xl border border-gray-200 
+      p-6 w-full max-w-3xl h-[650px] overflow-hidden flex flex-col">
+
+      {/* Sticky Header */}
+      <div className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm pb-4">
+        <h1 className="text-3xl font-bold text-center text-gray-800 mb-4">
           My To-do List
+        </h1>
 
-      </h1>
-       
+        <TodoForm 
+          priority={priority} 
+          setPriority={setPriority} 
+          category={category} 
+          handleAddTodo={handleAddTodo} 
+          setFilters={setFilters}
+          setNewTodo={setNewTodo}
+          newTodo={newTodo}
+          setCategory={setCategory}
+        />
 
-  
-      <TodoForm 
-      priority={priority} 
-      setPriority={setPriority} 
-      category={category} 
-      handleAddTodo= {handleAddTodo} 
-      setFilters={setFilters}
-      setNewTodo={setNewTodo}
-      newTodo={newTodo}
-      setCategory={setCategory}
+        <div className="flex justify-end w-full">
+          <p className="text-sm text-gray-500">
+            {filteredTodos.filter(t => !t.completed).length} tasks remaining
+          </p>
+        </div>
+
+        <hr className="my-4 border-gray-200" />
+        <TodoFilter filter={filter} setFilter={setFilter} />
+        <hr className="my-4 border-gray-200" />
+      </div>
+
+      {/* Scrollable Todo List */}
+      <div className="overflow-y-auto flex-grow px-4 py-2 bg-gray-50">
+        <TodoList
+          todos={filteredTodos}
+          onToggle={handleToggle}
+          onDelete={handleDelete}
+          onUpdate={handleUpdate}
+        />
+      </div>
+
+      <Pages
+        goNext={goNext}
+        goPrev={goPrev}
+        page={filters.page}
+        size={filters.size}
+        totalPages={totalPages}
+        setFilters={setFilters}
+      />
+    </div>
+
+    {/* RIGHT: SEARCH + STATS */}
+    <div className="w-80 flex flex-col gap-4 h-[650px]">
+      <TodoSearch 
+        filters={filters}
+        setFilters={setFilters} 
+        loadTodos={loadTodos}
       />
 
-     
-        <div className="flex justify-end w-full">
-      <p className="text-sm text-gray-500">
-        {filteredTodos.filter(t => !t.completed).length} tasks remaining
-      </p>
-        </div>
+      <Stats
+        selectedProjectId={selectedProjectId}
+        refreshKey={statsRefreshKey}
+      />
+    </div>
 
-      <hr className="my-4 border-gray-200" />
-
-      <TodoFilter filter={filter} setFilter={setFilter} />
-
-      <hr className="my-4 border-gray-200" />
-
-      </div> 
-
-      {/*sticky part */}
-
-      <div className="overflow-y-auto flex-grow p-6 bg-gray-50"> {/*allows for a seperate scrolling feature*/}
-      
-        <TodoList
-            todos={filteredTodos}
-            onToggle={handleToggle}
-            onDelete={handleDelete}
-            onUpdate={handleUpdate}
-            
-        />
-       
-        </div>
-       
-        <Pages
-          goNext={goNext}
-          goPrev={goPrev}
-          page={filters.page}
-          size ={filters.size}
-          totalPages={totalPages}
-          setFilters={setFilters}
-        />
-        
-      </div>
-    
-      
-    
- {/*if any todos are completed, then render the button*/}
- {todos.some(t => t.completed) && ( 
-        <div
-          className = "fixed right-6 bottom-28 transition-all duration-500 ease-in-out transform translate-x-0 opacity-100"
+    {/* Floating Delete Completed */}
+    {todos.some(t => t.completed) && (
+      <div className="fixed right-6 bottom-28">
+        <button
+          onClick={handleDeleteCompleted}
+          className="bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-red-600 transition"
         >
-          <button
-               onClick={handleDeleteCompleted}
-               className="bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-red-600 transition"
-          >
-                Delete Completed
-
-          </button>
-         </div>
-        
-      )}
-
-
-<div className="ml-8">
-      <TodoSearch 
-      filters={filters}
-      setFilters={setFilters} 
-      loadTodos={loadTodos}
-       />
-
-       <Stats
-  selectedProjectId={selectedProjectId}
-  refreshKey={statsRefreshKey}
-/>
-      
-      
-</div>
-  
-      
+          Delete Completed
+        </button>
+      </div>
+    )}
 
   </div>
-    
-  );
+);
+
 }
 
 export default App;

@@ -5,7 +5,7 @@ import { useState } from "react";
 
 function TodoSearch({ filters, setFilters, loadTodos }) {
   return (
-    <div className="ml-8 mt-4 flex flex-wrap items-end space-x-2 flex-shrink-0">
+    <div className="mt-4 flex items-center gap-2 w-full">
       <input
         type="text"
         value={filters.search}
@@ -17,7 +17,8 @@ function TodoSearch({ filters, setFilters, loadTodos }) {
                 }))}
         onKeyDown={(e) => e.key === "Enter" && loadTodos()}
         placeholder="Search for a todo"
-        className="w-64 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        className="flex-1 min-w-0 border border-gray-300 rounded-lg px-3 py-2
+             focus:outline-none focus:ring-2 focus:ring-blue-400"
       />
 
       {/*<button

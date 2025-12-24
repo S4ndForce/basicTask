@@ -51,6 +51,11 @@ export const deleteTodo = (id) => {
   return axios.delete(`${API_URL}/todos/${id}`);
 };
 
+export const deleteProject = (id) => {
+  console.log("DELETE PROJECT CALLED WITH ID:", id);
+  return axios.delete(`${API_URL}/projects/${id}`);
+};
+
 export const deleteCompleted = async (todos) => {
   const completed = todos.filter((t) => t.completed);
   for (const todo of completed) { //front end  decides what is completed, this just deletes by id
