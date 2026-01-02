@@ -2,6 +2,8 @@ package com.example.dto;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+
 public class PageResponse<T> {
     
     private List<T> content;
@@ -39,9 +41,7 @@ public class PageResponse<T> {
     public int getTotalPages() {
         return totalPages;
     }
-    /* 
-    public PageResponse<T> fromEntity(Page<T> page){
-        
-    }
-    */
+    // Generics cannot be static so adding factory method is not helpful
+    
+    
 }

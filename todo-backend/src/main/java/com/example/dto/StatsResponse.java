@@ -53,5 +53,6 @@ public  Map<Category, Long> getCountByCategory() {
 public void setCountByCategory( Map<Category, Long> countByCategory) {
     this.countByCategory = countByCategory;
 }
+   
 
 }

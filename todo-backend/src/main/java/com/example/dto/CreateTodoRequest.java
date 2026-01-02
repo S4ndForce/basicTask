@@ -5,9 +5,11 @@ import com.example.todo.enums.Priority;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 public class CreateTodoRequest {
-    @NotBlank
+    @NotBlank(message = "Description cannot be empty")
+    @Size(max = 167, message = "Description cannot exceed 167 characters")
     private String description;
 
     @NotNull
@@ -17,7 +19,7 @@ public class CreateTodoRequest {
     private Priority priority;
 
      @NotNull
-    private Boolean completed;
+    private Boolean completed = false;
     private Long projectId; // <-- optional
 
     public Long getProjectId() { return projectId; }

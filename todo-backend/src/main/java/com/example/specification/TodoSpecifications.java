@@ -12,7 +12,7 @@ public class TodoSpecifications {
     //Where the magic happens
     public static Specification<TodoItem> hasPriority(Priority priority){
         return(root, query, cb) ->
-                                                                //compares database priority to user input priority 
+                                                                // compares database priority to user input priority 
             priority == null ? cb.conjunction() : cb.equal(root.get("priority"), priority); 
     }
     public static Specification<TodoItem> hasCategory(Category category) {

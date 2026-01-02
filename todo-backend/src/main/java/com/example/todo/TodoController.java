@@ -23,10 +23,10 @@ import jakarta.validation.Valid;
 @CrossOrigin(origins = "http://localhost:3000")
 public class TodoController {
 
-    private final TodoService service;
+    private final TodoService todoService;
 
-    public TodoController(TodoService service) {
-        this.service = service;
+    public TodoController(TodoService todoService) {
+        this.todoService = todoService;
     }
 
     @GetMapping
@@ -61,32 +61,34 @@ public class TodoController {
     Sort sort = Sort.by(sortDirection, sortField);
       Pageable pageable = PageRequest.of(page, size, sort);
 
-        return service.getFilteredTodos(filter, pageable);
+        return todoService.getFilteredTodos(filter, pageable);
     }
 
     @PostMapping
     public TodoResponse create(@RequestBody @Valid CreateTodoRequest req) {
-        return service.createTodo(req);
+        return todoService.createTodo(req);
     }
 
     @PutMapping("/{id}") //take in id because it requires individual todos
     public TodoResponse update(@PathVariable Long id, @RequestBody @Valid CreateTodoRequest req) {
-        return service.updateTodo(id, req);
+        return todoService.updateTodo(id, req);
     }
 
     @PatchMapping("/{id}")
     public TodoResponse patch(@PathVariable Long id, @RequestBody UpdateTodoRequest req) {
-        return service.patchTodo(id, req);
+        return todoService.patchTodo(id, req);
     }
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
-        service.deleteTodo(id);
+        todoService.deleteTodo(id);
     }
 
     @GetMapping("/stats")
     public StatsResponse getStats() {
-        return service.getTodoStats();
+        return todoService.getTodoStats();
     }
+
+    // path variable vs req body?
     
 }
